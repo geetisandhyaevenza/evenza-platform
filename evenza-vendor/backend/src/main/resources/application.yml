@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: evenza-vendor
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:mysql://localhost:3306/evenza_vendor?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        default_batch_fetch_size: 20
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 50MB
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: ${PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+jwt:
+  secret: ${JWT_SECRET:evenza-vendor-super-secret-key-2024-production-ready-jwt-token-signing-key}
+  expiration: 86400000
+  refresh-expiration: 604800000
+
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  upload-dir: ${UPLOAD_DIR:uploads}
+  base-url: ${BASE_URL:http://localhost:8080}
+
+aws:
+  s3:
+    bucket: ${AWS_S3_BUCKET:evenza-vendor-uploads}
+    region: ${AWS_REGION:ap-south-1}
+    access-key: ${AWS_ACCESS_KEY:}
+    secret-key: ${AWS_SECRET_KEY:}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+
+logging:
+  level:
+    com.evenza: DEBUG
+    org.springframework.security: INFO

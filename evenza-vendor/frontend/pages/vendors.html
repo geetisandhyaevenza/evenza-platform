@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Find Vendors — Evenza</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    body { background: var(--gray-50); padding-top: var(--nav-h); }
+
+    .search-hero {
+      background: var(--burg-dark);
+      padding: 36px 0 28px;
+    }
+
+    .filter-sidebar {
+      width: 240px;
+      flex-shrink: 0;
+    }
+
+    .filter-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-200);
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .filter-title {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      margin-bottom: 12px;
+    }
+
+    .filter-check-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 0;
+      cursor: pointer;
+    }
+
+    .filter-check-item label {
+      font-size: 13px;
+      color: var(--dark);
+      cursor: pointer;
+      flex: 1;
+    }
+
+    .filter-count {
+      font-size: 11px;
+      color: var(--gray-400);
+      background: var(--gray-100);
+      padding: 1px 6px;
+      border-radius: 10px;
+    }
+
+    .price-range {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .price-input {
+      flex: 1;
+      padding: 7px 10px;
+      border: 1px solid var(--gray-200);
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+      color: var(--dark);
+    }
+
+    .price-input:focus { border-color: var(--burg-mid); }
+
+    .sort-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-200);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .vendor-grid-listing {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .vendor-list-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all var(--t-slow);
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .vendor-list-card:hover {
+      border-color: var(--burg-mid);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .vlc-img {
+      width: 100%;
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .vlc-badges {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .vlc-wishlist {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all var(--t-fast);
+    }
+
+    .vlc-wishlist:hover { background: var(--white); transform: scale(1.1); }
+    .vlc-wishlist.active { color: var(--danger); }
+
+    .vlc-body { padding: 14px 16px; }
+
+    .vlc-cat {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 3px;
+    }
+
+    .vlc-name {
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: var(--dark);
+      margin-bottom: 3px;
+    }
+
+    .vlc-location {
+      font-size: 11px;
+      color: var(--gray-400);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .vlc-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 8px;
+      border-top: 1px solid var(--gray-100);
+    }
+
+    .vlc-price {
+      font-family: var(--font-display);
+      font-size: 15px;
+      color: var(--burg);
+    }
+
+    .vlc-rating {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 32px 0 16px;
+    }
+
+    .page-btn {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--gray-200);
+      background: var(--white);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all var(--t-fast);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .page-btn:hover { border-color: var(--burg); color: var(--burg); }
+    .page-btn.active { background: var(--burg); color: var(--cream); border-color: var(--burg); }
+
+    .active-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--burg-light);
+      border: 1px solid var(--burg-mid);
+      font-size: 11px;
+      color: var(--burg);
+    }
+
+    .active-chip button {
+      background: none;
+      border: none;
+      color: var(--burg);
+      cursor: pointer;
+      font-size: 13px;
+      padding: 0;
+      line-height: 1;
+    }
+
+    @media (max-width: 1000px) { .vendor-grid-listing { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 700px)  { .filter-sidebar { display: none; } .vendor-grid-listing { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar scrolled" id="navbar" style="background:rgba(253,250,244,0.97)!important;">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 1L11 6h5l-4 3 1.5 5L9 11.5 4.5 14 6 9 2 6h5z" fill="#F5EFE0"/></svg></div>
+      <span class="nav-logo-text" style="color:var(--dark)!important;"><span style="color:var(--burg)">E</span>venza</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="vendors.html" class="nav-link active">Find Vendors</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="register.html" class="nav-link">Join as Vendor</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-outline-dark btn-sm">Sign In</a>
+      <a href="register.html" class="btn btn-gold btn-sm">Get Started</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SEARCH HERO -->
+<div class="search-hero">
+  <div class="container">
+    <div style="max-width:680px;margin:0 auto;">
+      <div style="font-family:var(--font-display);font-style:italic;color:var(--cream);font-size:1.6rem;text-align:center;margin-bottom:16px;">
+        Find Your Perfect <span style="color:var(--gold-mid);">Event Professional</span>
+      </div>
+      <div class="search-bar" style="max-width:100%;">
+        <div class="search-field" style="flex:1.5;">
+          <svg width="16" height="16" fill="none" viewBox="0 0 16 16" style="color:var(--gray-400);flex-shrink:0"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/><line x1="10" y1="10" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <input type="text" placeholder="Photographer, DJ, Caterer..." id="searchQ" oninput="debounceSearch()" style="font-size:13px;"/>
+        </div>
+        <div class="search-field" style="max-width:160px;">
+          <svg width="14" height="14" fill="none" viewBox="0 0 14 14" style="color:var(--gray-400);flex-shrink:0"><path d="M7 1C4.7 1 3 2.7 3 5c0 3.3 4 8 4 8s4-4.7 4-8c0-2.3-1.7-4-4-4zm0 5.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="currentColor"/></svg>
+          <select id="searchCity" onchange="doSearch()" style="border:none;outline:none;font-size:13px;color:var(--dark);background:transparent;cursor:pointer;">
+            <option value="">All Cities</option>
+            <option>Mumbai</option><option>Delhi</option><option>Bangalore</option>
+            <option>Chennai</option><option>Hyderabad</option><option>Pune</option>
+            <option>Kolkata</option><option>Jaipur</option>
+          </select>
+        </div>
+        <button class="search-btn" onclick="doSearch()">Search</button>
+      </div>
+
+      <!-- Active filters display -->
+      <div id="activeFilters" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container" style="padding-top:28px;padding-bottom:40px;">
+  <div style="display:flex;gap:24px;align-items:flex-start;">
+
+    <!-- ============ SIDEBAR FILTERS ============ -->
+    <aside class="filter-sidebar">
+      <div class="filter-card">
+        <div class="filter-title">Category</div>
+        <div id="catFilters">
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-all" value="" checked onchange="applyFilters()"/><label for="cat-all">All Categories</label><span class="filter-count">2,847</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-photo" value="Photographer" onchange="applyFilters()"/><label for="cat-photo">Photographer</label><span class="filter-count">680</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-makeup" value="Makeup Artist" onchange="applyFilters()"/><label for="cat-makeup">Makeup Artist</label><span class="filter-count">420</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-mehendi" value="Mehendi Artist" onchange="applyFilters()"/><label for="cat-mehendi">Mehendi Artist</label><span class="filter-count">310</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-cater" value="Caterer" onchange="applyFilters()"/><label for="cat-cater">Caterer</label><span class="filter-count">350</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-decor" value="Decorator" onchange="applyFilters()"/><label for="cat-decor">Decorator</label><span class="filter-count">290</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-dj" value="DJ" onchange="applyFilters()"/><label for="cat-dj">DJ</label><span class="filter-count">180</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-planner" value="Wedding Planner" onchange="applyFilters()"/><label for="cat-planner">Wedding Planner</label><span class="filter-count">240</span></div>
+          <div class="filter-check-item"><input type="radio" name="cat" class="form-check" id="cat-venue" value="Venue" onchange="applyFilters()"/><label for="cat-venue">Venue</label><span class="filter-count">160</span></div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-title">Budget Range</div>
+        <div class="price-range">
+          <input type="number" id="minPrice" placeholder="Min ₹" class="price-input" onchange="applyFilters()"/>
+          <span style="color:var(--gray-400);font-size:12px;">–</span>
+          <input type="number" id="maxPrice" placeholder="Max ₹" class="price-input" onchange="applyFilters()"/>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;">
+          <button class="chip" onclick="setPrice(0,10000,this)">Under ₹10K</button>
+          <button class="chip" onclick="setPrice(10000,25000,this)">₹10K–25K</button>
+          <button class="chip" onclick="setPrice(25000,75000,this)">₹25K–75K</button>
+          <button class="chip" onclick="setPrice(75000,999999,this)">₹75K+</button>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-title">Rating</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="filter-check-item"><input type="radio" name="rating" class="form-check" id="rat-all" value="" checked onchange="applyFilters()"/><label for="rat-all">All ratings</label></div>
+          <div class="filter-check-item"><input type="radio" name="rating" class="form-check" id="rat-4.5" value="4.5" onchange="applyFilters()"/><label for="rat-4.5">★★★★★ 4.5+</label></div>
+          <div class="filter-check-item"><input type="radio" name="rating" class="form-check" id="rat-4" value="4" onchange="applyFilters()"/><label for="rat-4">★★★★☆ 4.0+</label></div>
+          <div class="filter-check-item"><input type="radio" name="rating" class="form-check" id="rat-3" value="3" onchange="applyFilters()"/><label for="rat-3">★★★☆☆ 3.0+</label></div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-title">Availability</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="filter-check-item"><input type="radio" name="avail" class="form-check" id="av-all" value="" checked onchange="applyFilters()"/><label for="av-all">Any availability</label></div>
+          <div class="filter-check-item"><input type="radio" name="avail" class="form-check" id="av-avail" value="AVAILABLE" onchange="applyFilters()"/><label for="av-avail">Available now</label></div>
+        </div>
+      </div>
+
+      <div class="filter-card">
+        <div class="filter-title">More Options</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div class="filter-check-item"><input type="checkbox" class="form-check" id="verifiedOnly" onchange="applyFilters()"/><label for="verifiedOnly">Verified only</label></div>
+          <div class="filter-check-item"><input type="checkbox" class="form-check" id="featuredOnly" onchange="applyFilters()"/><label for="featuredOnly">Featured</label></div>
+          <div class="filter-check-item"><input type="checkbox" class="form-check" id="premiumOnly" onchange="applyFilters()"/><label for="premiumOnly">Premium</label></div>
+        </div>
+      </div>
+
+      <button class="btn btn-outline-dark btn-sm btn-block" onclick="clearFilters()">Clear All Filters</button>
+    </aside>
+
+    <!-- ============ RESULTS AREA ============ -->
+    <div style="flex:1;min-width:0;">
+      <div class="sort-bar">
+        <div>
+          <span id="resultCount" style="font-size:14px;font-weight:500;color:var(--dark);">2,847 vendors found</span>
+          <span style="font-size:13px;color:var(--gray-400);margin-left:6px;">across India</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <select id="sortBy" class="form-control form-select" style="width:auto;font-size:13px;padding:7px 28px 7px 12px;" onchange="applyFilters()">
+            <option value="rating">Best Rated</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+            <option value="reviews">Most Reviews</option>
+            <option value="newest">Newest</option>
+          </select>
+          <div style="display:flex;gap:4px;">
+            <button id="gridViewBtn" onclick="setView('grid',this)" style="padding:8px;border:1px solid var(--burg);border-radius:6px;background:var(--burg);cursor:pointer;">
+              <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><rect x="1" y="1" width="5" height="5" rx="1" fill="var(--cream)"/><rect x="8" y="1" width="5" height="5" rx="1" fill="var(--cream)"/><rect x="1" y="8" width="5" height="5" rx="1" fill="var(--cream)"/><rect x="8" y="8" width="5" height="5" rx="1" fill="var(--cream)"/></svg>
+            </button>
+            <button id="listViewBtn" onclick="setView('list',this)" style="padding:8px;border:1px solid var(--gray-200);border-radius:6px;background:var(--white);cursor:pointer;">
+              <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M2 3h10M2 7h10M2 11h10" stroke="var(--gray-400)" stroke-width="1.3" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="vendorResults" class="vendor-grid-listing"></div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+</div>
+
+<a href="https://wa.me/919876500000" class="whatsapp-float" target="_blank" aria-label="WhatsApp">
+  <svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/main.js"></script>
+<script>
+const VENDORS = [
+  {id:1,name:'Kapoor Photography',cat:'Photographer',city:'Mumbai',rating:4.9,reviews:156,price:45000,verified:true,featured:true,premium:true,avail:'AVAILABLE',bg:'#F7EDEF',icon:'📷'},
+  {id:2,name:'Bloom Decorations',cat:'Decorator',city:'Delhi',rating:4.8,reviews:98,price:35000,verified:true,featured:true,premium:false,avail:'AVAILABLE',bg:'#FBF3E2',icon:'🌸'},
+  {id:3,name:'Divine Caterers',cat:'Caterer',city:'Bangalore',rating:4.7,reviews:210,price:800,verified:true,featured:false,premium:false,avail:'AVAILABLE',bg:'#E6F5EE',icon:'🍽'},
+  {id:4,name:'Glamour Makeup Studio',cat:'Makeup Artist',city:'Chennai',rating:4.9,reviews:340,price:15000,verified:true,featured:true,premium:true,avail:'AVAILABLE',bg:'#FBEAF0',icon:'💄'},
+  {id:5,name:'Mehendi Magic',cat:'Mehendi Artist',city:'Jaipur',rating:4.8,reviews:189,price:8000,verified:false,featured:false,premium:false,avail:'AVAILABLE',bg:'#F7EDEF',icon:'🖐'},
+  {id:6,name:'BeatDrop Entertainment',cat:'DJ',city:'Mumbai',rating:4.6,reviews:87,price:25000,verified:true,featured:false,premium:false,avail:'BUSY',bg:'#EEE9FF',icon:'🎵'},
+  {id:7,name:'Dream Wedding Planners',cat:'Wedding Planner',city:'Hyderabad',rating:4.9,reviews:124,price:150000,verified:true,featured:true,premium:true,avail:'AVAILABLE',bg:'#E6F1FB',icon:'📋'},
+  {id:8,name:'Grand Pavilion Venue',cat:'Venue',city:'Mumbai',rating:4.7,reviews:56,price:200000,verified:true,featured:false,premium:false,avail:'AVAILABLE',bg:'#F0E8F8',icon:'🏛'},
+  {id:9,name:'Swarovski Jewelry',cat:'Jewelry',city:'Surat',rating:4.8,reviews:78,price:5000,verified:true,featured:false,premium:false,avail:'AVAILABLE',bg:'#FBF3E2',icon:'💍'},
+  {id:10,name:'Click & Canvas',cat:'Photographer',city:'Pune',rating:4.6,reviews:92,price:30000,verified:false,featured:false,premium:false,avail:'AVAILABLE',bg:'#F7EDEF',icon:'📷'},
+  {id:11,name:'Royal Caterers',cat:'Caterer',city:'Delhi',rating:4.5,reviews:145,price:600,verified:true,featured:false,premium:false,avail:'AVAILABLE',bg:'#E6F5EE',icon:'🍽'},
+  {id:12,name:'Prism Studios',cat:'Photographer',city:'Bangalore',rating:4.9,reviews:201,price:60000,verified:true,featured:true,premium:true,avail:'AVAILABLE',bg:'#F0E8F8',icon:'📷'},
+];
+
+let currentView = 'grid';
+let currentPage = 1;
+const PER_PAGE = 9;
+const wishlist = new Set();
+
+const debounceSearch = debounce(doSearch, 400);
+
+function getFilters() {
+  return {
+    q: (document.getElementById('searchQ').value || '').toLowerCase(),
+    city: document.getElementById('searchCity').value,
+    cat: document.querySelector('input[name="cat"]:checked')?.value || '',
+    minPrice: parseInt(document.getElementById('minPrice').value) || 0,
+    maxPrice: parseInt(document.getElementById('maxPrice').value) || Infinity,
+    rating: parseFloat(document.querySelector('input[name="rating"]:checked')?.value) || 0,
+    verified: document.getElementById('verifiedOnly').checked,
+    featured: document.getElementById('featuredOnly').checked,
+    premium:  document.getElementById('premiumOnly').checked,
+    sortBy:   document.getElementById('sortBy').value,
+  };
+}
+
+function filterVendors() {
+  const f = getFilters();
+  let data = VENDORS.filter(v => {
+    if (f.q && !v.name.toLowerCase().includes(f.q) && !v.cat.toLowerCase().includes(f.q)) return false;
+    if (f.city && v.city !== f.city) return false;
+    if (f.cat && v.cat !== f.cat) return false;
+    if (v.price < f.minPrice) return false;
+    if (v.price > f.maxPrice) return false;
+    if (v.rating < f.rating) return false;
+    if (f.verified && !v.verified) return false;
+    if (f.featured && !v.featured) return false;
+    if (f.premium  && !v.premium)  return false;
+    return true;
+  });
+
+  if (f.sortBy === 'price_asc')   data.sort((a,b) => a.price - b.price);
+  if (f.sortBy === 'price_desc')  data.sort((a,b) => b.price - a.price);
+  if (f.sortBy === 'rating')      data.sort((a,b) => b.rating - a.rating);
+  if (f.sortBy === 'reviews')     data.sort((a,b) => b.reviews - a.reviews);
+
+  return data;
+}
+
+function doSearch() { currentPage = 1; render(); }
+function applyFilters() { currentPage = 1; render(); }
+
+function render() {
+  const data = filterVendors();
+  const start = (currentPage - 1) * PER_PAGE;
+  const page  = data.slice(start, start + PER_PAGE);
+  const total = data.length;
+
+  document.getElementById('resultCount').textContent = `${total.toLocaleString('en-IN')} vendor${total !== 1 ? 's' : ''} found`;
+
+  const grid = document.getElementById('vendorResults');
+  if (currentView === 'list') {
+    grid.style.gridTemplateColumns = '1fr';
+  } else {
+    grid.style.gridTemplateColumns = 'repeat(3,1fr)';
+  }
+
+  if (!page.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:48px 0;">
+      <div style="font-size:40px;margin-bottom:12px;">🔍</div>
+      <div style="font-family:var(--font-display);font-style:italic;color:var(--gray-400);font-size:1.2rem;">No vendors found</div>
+      <div style="font-size:13px;color:var(--gray-300);margin-top:6px;">Try adjusting your filters</div>
+      <button onclick="clearFilters()" class="btn btn-outline-dark btn-sm" style="margin-top:16px;">Clear Filters</button>
+    </div>`;
+  } else {
+    grid.innerHTML = page.map(v => renderCard(v)).join('');
+  }
+
+  renderPagination(total);
+  updateActiveFilters();
+}
+
+function renderCard(v) {
+  const inWishlist = wishlist.has(v.id);
+  if (currentView === 'list') {
+    return `
+      <a href="vendor-profile.html?id=${v.id}" class="vendor-list-card" style="display:flex;align-items:center;gap:0;">
+        <div style="width:120px;min-width:120px;height:100px;background:${v.bg};display:flex;align-items:center;justify-content:center;font-size:32px;">${v.icon}</div>
+        <div style="flex:1;padding:14px 16px;">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+            <div>
+              <div class="vlc-cat">${v.cat}</div>
+              <div class="vlc-name" style="font-size:15px;">${v.name}</div>
+              <div class="vlc-location">${v.city}</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div class="vlc-price">₹${v.price.toLocaleString('en-IN')}+</div>
+              <div style="font-size:11px;color:var(--gold);">★ ${v.rating} (${v.reviews})</div>
+              <button onclick="event.preventDefault();toggleWishlist(${v.id},this)" class="vlc-wishlist ${inWishlist?'active':''}" style="position:static;margin-top:6px;width:auto;padding:4px 8px;border-radius:6px;border:1px solid var(--gray-200);font-size:11px;">${inWishlist?'♥ Saved':'♡ Save'}</button>
+            </div>
+          </div>
+        </div>
+        <div style="padding:14px;flex-shrink:0;display:flex;flex-direction:column;gap:6px;">
+          ${v.verified?'<span class="badge badge-verified">✓ Verified</span>':''}
+          ${v.featured?'<span class="badge badge-gold">★ Featured</span>':''}
+        </div>
+      </a>`;
+  }
+  return `
+    <a href="vendor-profile.html?id=${v.id}" class="vendor-list-card">
+      <div class="vlc-img" style="background:${v.bg};">
+        <span style="font-size:44px;">${v.icon}</span>
+        <div class="vlc-badges">
+          ${v.verified?'<span class="badge badge-verified" style="font-size:9px;">✓ Verified</span>':''}
+          ${v.featured?'<span class="badge badge-gold" style="font-size:9px;">★ Featured</span>':''}
+        </div>
+        <button onclick="event.preventDefault();toggleWishlist(${v.id},this)" class="vlc-wishlist ${inWishlist?'active':''}">
+          ${inWishlist?'♥':'♡'}
+        </button>
+      </div>
+      <div class="vlc-body">
+        <div class="vlc-cat">${v.cat}</div>
+        <div class="vlc-name">${v.name}</div>
+        <div class="vlc-location">
+          <svg width="11" height="11" fill="none" viewBox="0 0 11 11"><path d="M5.5 1C3.8 1 2.5 2.3 2.5 4c0 2.5 3 6 3 6s3-3.5 3-6c0-1.7-1.3-3-3-3zm0 4a1 1 0 110-2 1 1 0 010 2z" fill="currentColor"/></svg>
+          ${v.city}
+        </div>
+        <div class="vlc-row">
+          <div class="vlc-price">₹${v.price.toLocaleString('en-IN')}+</div>
+          <div class="vlc-rating">
+            <span style="color:var(--gold);font-size:12px;">★ ${v.rating}</span>
+            <span style="font-size:11px;color:var(--gray-400);">(${v.reviews})</span>
+          </div>
+        </div>
+      </div>
+    </a>`;
+}
+
+function renderPagination(total) {
+  const pages = Math.ceil(total / PER_PAGE);
+  const wrap = document.getElementById('pagination');
+  if (pages <= 1) { wrap.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹</button>`;
+  for (let i = 1; i <= pages; i++) {
+    if (i === 1 || i === pages || (i >= currentPage-1 && i <= currentPage+1)) {
+      html += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if (i === currentPage-2 || i === currentPage+2) {
+      html += `<span style="color:var(--gray-400);align-self:center;">…</span>`;
+    }
+  }
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===pages?'disabled':''}>›</button>`;
+  wrap.innerHTML = html;
+}
+
+function goPage(n) {
+  const data = filterVendors();
+  const pages = Math.ceil(data.length / PER_PAGE);
+  if (n < 1 || n > pages) return;
+  currentPage = n;
+  render();
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function updateActiveFilters() {
+  const f = getFilters();
+  const chips = [];
+  if (f.q)       chips.push(`"${f.q}"`);
+  if (f.city)    chips.push(f.city);
+  if (f.cat)     chips.push(f.cat);
+  if (f.minPrice > 0) chips.push(`Min ₹${f.minPrice.toLocaleString()}`);
+  if (f.maxPrice < Infinity) chips.push(`Max ₹${f.maxPrice.toLocaleString()}`);
+  if (f.verified) chips.push('Verified only');
+  if (f.featured) chips.push('Featured');
+
+  document.getElementById('activeFilters').innerHTML = chips.map(c => `
+    <div class="active-chip">${c}</div>`).join('');
+}
+
+function setPrice(min, max, el) {
+  document.getElementById('minPrice').value = min || '';
+  document.getElementById('maxPrice').value = max === 999999 ? '' : max;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+  applyFilters();
+}
+
+function clearFilters() {
+  document.getElementById('searchQ').value = '';
+  document.getElementById('searchCity').value = '';
+  document.getElementById('minPrice').value = '';
+  document.getElementById('maxPrice').value = '';
+  document.getElementById('cat-all').checked = true;
+  document.getElementById('rat-all').checked = true;
+  document.getElementById('av-all').checked = true;
+  document.getElementById('verifiedOnly').checked = false;
+  document.getElementById('featuredOnly').checked = false;
+  document.getElementById('premiumOnly').checked = false;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  applyFilters();
+}
+
+function toggleWishlist(id, btn) {
+  if (wishlist.has(id)) {
+    wishlist.delete(id);
+    btn.innerHTML = '♡';
+    btn.classList.remove('active');
+    showToast('Removed from saved', 'info');
+  } else {
+    wishlist.add(id);
+    btn.innerHTML = '♥';
+    btn.classList.add('active');
+    showToast('Saved to wishlist! ♥', 'success');
+  }
+}
+
+function setView(type, btn) {
+  currentView = type;
+  document.querySelectorAll('#gridViewBtn,#listViewBtn').forEach(b => {
+    b.style.background = 'var(--white)';
+    b.style.borderColor = 'var(--gray-200)';
+    b.querySelector('svg').style.stroke = 'var(--gray-400)';
+  });
+  btn.style.background = 'var(--burg)';
+  btn.style.borderColor = 'var(--burg)';
+  render();
+}
+
+// Read URL params
+const params = new URLSearchParams(location.search);
+if (params.get('q'))    document.getElementById('searchQ').value = params.get('q');
+if (params.get('city')) document.getElementById('searchCity').value = params.get('city');
+if (params.get('cat')) {
+  document.querySelectorAll('input[name="cat"]').forEach(r => {
+    if (r.value.toLowerCase() === params.get('cat').toLowerCase()) r.checked = true;
+  });
+}
+
+render();
+</script>
+</body>
+</html>

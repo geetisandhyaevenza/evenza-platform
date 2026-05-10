@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital Visiting Card — Evenza Vendor</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body { background: var(--gray-50); }
+
+    .vc-layout { display: grid; grid-template-columns: 1fr 420px; gap: 28px; padding: 28px; max-width: 1280px; margin: 0 auto; }
+
+    /* Card Preview Area */
+    .card-preview-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 20px; position: sticky; top: 100px;
+    }
+
+    .card-canvas {
+      width: 380px; height: 216px;
+      border-radius: 14px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(42,26,16,0.25);
+      transition: all 0.4s;
+      cursor: pointer;
+    }
+
+    .card-canvas:hover { transform: perspective(800px) rotateY(-5deg) rotateX(2deg); }
+
+    /* Template: Elegant Gold */
+    .tpl-elegant-gold {
+      background: linear-gradient(135deg, #2A1A10 0%, #3D2518 100%);
+      padding: 24px 28px;
+      display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    }
+
+    .tpl-elegant-gold .card-logo-line { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tpl-elegant-gold .card-logo-circle { width: 38px; height: 38px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 16px; font-style: italic; color: var(--dark); flex-shrink: 0; }
+    .tpl-elegant-gold .card-name { font-family: var(--font-display); font-size: 20px; font-style: italic; color: var(--cream); }
+    .tpl-elegant-gold .card-title { font-size: 10px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin-top: 2px; }
+    .tpl-elegant-gold .card-divider { height: 1px; background: rgba(201,151,58,0.3); margin: 8px 0; }
+    .tpl-elegant-gold .card-contacts { display: flex; flex-direction: column; gap: 3px; }
+    .tpl-elegant-gold .card-contact-item { font-size: 10px; color: rgba(245,239,224,0.6); display: flex; align-items: center; gap: 6px; }
+    .tpl-elegant-gold .card-qr { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 64px; height: 64px; border-radius: 8px; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center; }
+
+    /* Template: Ivory Minimal */
+    .tpl-ivory-minimal {
+      background: var(--ivory);
+      border: 1px solid var(--cream-dark);
+      padding: 24px 28px;
+      display: flex; flex-direction: column; justify-content: space-between; height: 100%;
+    }
+
+    .tpl-ivory-minimal .card-name { font-family: var(--font-display); font-size: 22px; color: var(--burg); }
+    .tpl-ivory-minimal .card-title { font-size: 11px; color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase; margin-top: 2px; }
+    .tpl-ivory-minimal .card-divider { width: 40px; height: 2px; background: var(--gold); margin: 10px 0; }
+    .tpl-ivory-minimal .card-contact-item { font-size: 11px; color: var(--gray-500); display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+    .tpl-ivory-minimal .card-qr { position: absolute; right: 20px; bottom: 20px; width: 60px; height: 60px; border-radius: 6px; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center; border: 1px solid var(--gray-200); }
+
+    /* Template: Burgundy Royal */
+    .tpl-burgundy-royal {
+      background: var(--burg);
+      padding: 0; height: 100%;
+      display: flex; flex-direction: column;
+    }
+
+    .tpl-burg-top { background: var(--burg-dark); padding: 20px 24px; flex: 1; }
+    .tpl-burg-bottom { background: var(--burg-mid); padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; }
+    .tpl-burgundy-royal .card-name { font-family: var(--font-display); font-size: 20px; font-style: italic; color: var(--cream); }
+    .tpl-burgundy-royal .card-title { font-size: 10px; letter-spacing: 0.12em; color: var(--gold-mid); text-transform: uppercase; margin: 4px 0 12px; }
+    .tpl-burgundy-royal .card-contact-item { font-size: 10px; color: rgba(245,239,224,0.7); display: flex; align-items: center; gap: 6px; margin-bottom: 3px; }
+    .tpl-burgundy-royal .card-qr { width: 56px; height: 56px; border-radius: 6px; overflow: hidden; background: white; display: flex; align-items: center; justify-content: center; }
+
+    /* Template Selector */
+    .template-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 20px; }
+
+    .template-thumb {
+      height: 64px; border-radius: 8px; cursor: pointer;
+      border: 2px solid transparent; transition: all var(--t-fast);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 500;
+      position: relative; overflow: hidden;
+    }
+
+    .template-thumb.active { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(201,151,58,0.3); }
+
+    /* Controls */
+    .ctrl-section { margin-bottom: 20px; }
+    .ctrl-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 10px; display: block; }
+
+    .color-picker-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .color-swatch { width: 28px; height: 28px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all var(--t-fast); }
+    .color-swatch:hover, .color-swatch.active { border-color: var(--gray-600); transform: scale(1.15); }
+
+    .share-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .font-options { display: flex; flex-wrap: wrap; gap: 6px; }
+    .font-chip { padding: 5px 12px; border-radius: 20px; border: 1px solid var(--gray-200); font-size: 12px; cursor: pointer; transition: all var(--t-fast); background: var(--white); }
+    .font-chip.active { border-color: var(--burg); background: var(--burg-light); color: var(--burg); }
+    .font-chip:hover { border-color: var(--burg); }
+
+    @media (max-width: 1000px) { .vc-layout { grid-template-columns: 1fr; padding: 20px; } .card-preview-wrap { position: static; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar scrolled" id="navbar" style="background:rgba(253,250,244,0.97)!important;">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 1L11 6h5l-4 3 1.5 5L9 11.5 4.5 14 6 9 2 6h5z" fill="#F5EFE0"/></svg></div>
+      <span class="nav-logo-text" style="color:var(--dark)!important;"><span style="color:var(--burg)">E</span>venza</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:12px;margin-left:auto;">
+      <a href="dashboard.html" class="btn btn-outline-dark btn-sm">← Dashboard</a>
+      <a href="vendor-profile.html" class="btn btn-primary btn-sm">My Profile</a>
+    </div>
+  </div>
+</nav>
+
+<div style="padding-top:var(--nav-h);">
+  <div style="background:var(--burg-dark);padding:32px 28px 28px;max-width:1280px;margin:0 auto;border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+    <div class="overline" style="color:var(--gold-mid);">Premium Feature</div>
+    <h1 style="font-family:var(--font-display);font-style:italic;color:var(--cream);font-size:2rem;font-weight:400;margin-top:4px;">Digital Visiting Card Generator</h1>
+    <p style="font-size:14px;color:rgba(245,239,224,0.55);margin-top:6px;">Create a stunning digital business card from your profile. Share it anywhere — WhatsApp, Instagram, or as a QR code.</p>
+  </div>
+
+  <div class="vc-layout">
+    <!-- ============================
+         LEFT: EDITOR
+         ============================ -->
+    <div>
+      <!-- Template Selection -->
+      <div class="card card-body" style="margin-bottom:20px;">
+        <div class="ctrl-label">Choose Template</div>
+        <div class="template-grid">
+          <div class="template-thumb active" style="background:linear-gradient(135deg,#2A1A10,#3D2518);" onclick="setTemplate('elegant-gold',this)">
+            <span style="color:var(--gold);font-size:10px;font-family:var(--font-display);font-style:italic;">Elegant Gold</span>
+          </div>
+          <div class="template-thumb" style="background:var(--ivory);border:1px solid var(--cream-dark);" onclick="setTemplate('ivory-minimal',this)">
+            <span style="color:var(--burg);font-size:10px;font-family:var(--font-display);font-style:italic;">Ivory Minimal</span>
+          </div>
+          <div class="template-thumb" style="background:var(--burg);" onclick="setTemplate('burgundy-royal',this)">
+            <span style="color:var(--cream);font-size:10px;font-family:var(--font-display);font-style:italic;">Burgundy Royal</span>
+          </div>
+        </div>
+
+        <!-- Font Selection -->
+        <div class="ctrl-label" style="margin-top:16px;">Typography</div>
+        <div class="font-options">
+          <div class="font-chip active" onclick="setFont('Cormorant Garamond',this)" style="font-family:'Cormorant Garamond',serif;">Cormorant</div>
+          <div class="font-chip" onclick="setFont('Playfair Display',this)" style="font-family:'Playfair Display',serif;">Playfair</div>
+          <div class="font-chip" onclick="setFont('Georgia',this)" style="font-family:Georgia,serif;">Georgia</div>
+          <div class="font-chip" onclick="setFont('Jost',this)" style="font-family:'Jost',sans-serif;">Jost</div>
+        </div>
+      </div>
+
+      <!-- Card Details -->
+      <div class="card card-body" style="margin-bottom:20px;">
+        <div style="font-family:var(--font-display);font-size:1.1rem;font-style:italic;color:var(--burg);margin-bottom:16px;">Card Information</div>
+
+        <div class="form-grid-2" style="margin-bottom:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="vcName" class="form-control" value="Rajesh Kapoor" oninput="updatePreview()"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Business / Title</label>
+            <input type="text" id="vcTitle" class="form-control" value="Professional Photographer" oninput="updatePreview()"/>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Business Name</label>
+          <input type="text" id="vcBiz" class="form-control" value="Kapoor Photography" oninput="updatePreview()"/>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label">Phone Number</label>
+            <input type="text" id="vcPhone" class="form-control" value="+91 98765 43210" oninput="updatePreview()"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">WhatsApp</label>
+            <input type="text" id="vcWhatsapp" class="form-control" value="+91 98765 43210" oninput="updatePreview()"/>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="vcEmail" class="form-control" value="rajesh@kapoor.photography" oninput="updatePreview()"/>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Website URL</label>
+          <input type="url" id="vcWebsite" class="form-control" value="https://kapoor.photography" oninput="updatePreview()"/>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">City / Address</label>
+          <input type="text" id="vcAddress" class="form-control" value="Mumbai, Maharashtra" oninput="updatePreview()"/>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="form-group">
+            <label class="form-label">Instagram</label>
+            <input type="text" id="vcInsta" class="form-control" value="@kapoor.photography" oninput="updatePreview()"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tagline (optional)</label>
+            <input type="text" id="vcTagline" class="form-control" value="Capturing love stories" oninput="updatePreview()"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="card card-body">
+        <div style="font-family:var(--font-display);font-size:1.1rem;font-style:italic;color:var(--burg);margin-bottom:16px;">Save & Share</div>
+        <div class="share-btns">
+          <button class="btn btn-primary" onclick="saveCard()">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M2 2h7l3 3v7H2V2z" stroke="currentColor" stroke-width="1.3"/><path d="M4 2v3h5V2M4 8h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Save Card
+          </button>
+          <button class="btn btn-gold" onclick="downloadCard()">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M7 2v7M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            Download PNG
+          </button>
+          <button class="btn btn-outline-dark" onclick="shareWhatsApp()">
+            <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464z"/></svg>
+            WhatsApp
+          </button>
+          <button class="btn btn-outline-dark" onclick="copyShareLink()">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M6 4H4a2 2 0 00-2 2v4a2 2 0 002 2h4a2 2 0 002-2v-2M8 2h4v4M10 4L6 8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Copy Link
+          </button>
+        </div>
+
+        <!-- QR Code section -->
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--gray-100);display:flex;align-items:center;gap:16px;">
+          <div id="qrcode-display" style="width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid var(--gray-200);background:white;display:flex;align-items:center;justify-content:center;"></div>
+          <div>
+            <div style="font-size:13px;font-weight:500;color:var(--dark);margin-bottom:4px;">Your QR Code</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-bottom:10px;">Scan to view your digital card</div>
+            <button class="btn btn-outline-dark btn-sm" onclick="downloadQR()">Download QR</button>
+          </div>
+        </div>
+
+        <!-- Share URL -->
+        <div style="margin-top:14px;background:var(--cream);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+          <span id="shareUrl" style="font-size:12px;color:var(--gray-500);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">https://evenza.com/card/kap-rzsh-4892</span>
+          <button onclick="copyShareLink()" style="background:none;border:none;color:var(--burg);font-size:11px;font-weight:500;cursor:pointer;flex-shrink:0;">Copy</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================
+         RIGHT: LIVE PREVIEW
+         ============================ -->
+    <div class="card-preview-wrap">
+      <div style="font-size:12px;font-weight:500;color:var(--gray-400);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:-8px;">Live Preview</div>
+
+      <!-- Card Canvas -->
+      <div class="card-canvas" id="cardCanvas">
+        <!-- Filled by JS -->
+      </div>
+
+      <div style="font-size:11px;color:var(--gray-400);text-align:center;">
+        Hover to see the 3D effect · Click to flip
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;">
+        <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.3rem;color:var(--burg);">45</div>
+          <div style="font-size:11px;color:var(--gray-400);">Views</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.3rem;color:var(--burg);">12</div>
+          <div style="font-size:11px;color:var(--gray-400);">Downloads</div>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:10px;padding:12px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:1.3rem;color:var(--burg);">8</div>
+          <div style="font-size:11px;color:var(--gray-400);">Shares</div>
+        </div>
+      </div>
+
+      <!-- Saved cards -->
+      <div style="width:100%;">
+        <div style="font-size:12px;font-weight:500;color:var(--gray-500);margin-bottom:10px;">My Saved Cards (2)</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:20px;border-radius:4px;background:linear-gradient(135deg,#2A1A10,#3D2518);flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:500;color:var(--dark);">Elegant Gold</div>
+              <div style="font-size:10px;color:var(--gray-400);">Created Jan 5, 2025</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="font-size:10px;padding:4px 8px;" onclick="showToast('Card loaded!','success')">Load</button>
+          </div>
+          <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:20px;border-radius:4px;background:var(--ivory);border:1px solid var(--cream-dark);flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="font-size:12px;font-weight:500;color:var(--dark);">Ivory Minimal</div>
+              <div style="font-size:10px;color:var(--gray-400);">Created Dec 18, 2024</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="font-size:10px;padding:4px 8px;" onclick="showToast('Card loaded!','success')">Load</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/main.js"></script>
+<script>
+let currentTemplate = 'elegant-gold';
+let currentFont = 'Cormorant Garamond';
+
+function getData() {
+  return {
+    name:    document.getElementById('vcName').value    || 'Vendor Name',
+    title:   document.getElementById('vcTitle').value   || 'Service Category',
+    biz:     document.getElementById('vcBiz').value     || 'Business Name',
+    phone:   document.getElementById('vcPhone').value   || '+91 XXXXX XXXXX',
+    email:   document.getElementById('vcEmail').value   || 'email@domain.com',
+    website: document.getElementById('vcWebsite').value || 'www.yoursite.com',
+    address: document.getElementById('vcAddress').value || 'City, State',
+    insta:   document.getElementById('vcInsta').value   || '@instagram',
+    tagline: document.getElementById('vcTagline').value || '',
+  };
+}
+
+function renderElegantGold(d) {
+  return `
+    <div class="tpl-elegant-gold" style="font-family:'${currentFont}',serif;">
+      <div>
+        <div class="card-logo-line">
+          <div class="card-logo-circle">${d.name.charAt(0)}</div>
+          <div>
+            <div class="card-name" style="font-family:'${currentFont}',serif;">${d.name}</div>
+            <div class="card-title">${d.title}</div>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div style="font-size:11px;color:rgba(201,151,58,0.8);font-style:italic;margin-bottom:8px;">${d.biz}</div>
+        <div class="card-contacts">
+          <div class="card-contact-item"><span>📞</span>${d.phone}</div>
+          <div class="card-contact-item"><span>✉</span>${d.email}</div>
+          <div class="card-contact-item"><span>🌐</span>${d.website}</div>
+          <div class="card-contact-item"><span>📍</span>${d.address}</div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+        <div style="font-size:9px;color:rgba(201,151,58,0.4);font-style:italic;">${d.tagline}</div>
+        <div style="font-size:9px;color:rgba(245,239,224,0.25);">evenza.com</div>
+      </div>
+      <div class="card-qr" id="qrPreview"></div>
+    </div>`;
+}
+
+function renderIvoryMinimal(d) {
+  return `
+    <div class="tpl-ivory-minimal" style="font-family:'${currentFont}',serif;">
+      <div>
+        <div class="card-name" style="font-family:'${currentFont}',serif;">${d.name}</div>
+        <div class="card-title">${d.title}</div>
+        <div class="card-divider"></div>
+        <div style="font-size:12px;color:var(--burg);margin-bottom:8px;font-style:italic;">${d.biz}</div>
+        <div class="card-contact-item"><span>📞</span>${d.phone}</div>
+        <div class="card-contact-item"><span>✉</span>${d.email}</div>
+        <div class="card-contact-item"><span>🌐</span>${d.website}</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="font-size:9px;color:var(--gray-300);font-style:italic;">${d.tagline || d.address}</div>
+      </div>
+      <div class="card-qr" id="qrPreview"></div>
+    </div>`;
+}
+
+function renderBurgundyRoyal(d) {
+  return `
+    <div class="tpl-burgundy-royal" style="font-family:'${currentFont}',serif;">
+      <div class="tpl-burg-top">
+        <div class="card-name" style="font-family:'${currentFont}',serif;">${d.name}</div>
+        <div class="card-title">${d.title}</div>
+        <div style="font-size:11px;color:rgba(245,239,224,0.5);margin-bottom:10px;font-style:italic;">${d.biz}</div>
+        <div class="card-contact-item"><span>📞</span>${d.phone}</div>
+        <div class="card-contact-item"><span>✉</span>${d.email}</div>
+        <div class="card-contact-item"><span>📍</span>${d.address}</div>
+      </div>
+      <div class="tpl-burg-bottom">
+        <div style="font-size:10px;color:rgba(245,239,224,0.5);">${d.insta || d.website}</div>
+        <div class="card-qr" id="qrPreview"></div>
+      </div>
+    </div>`;
+}
+
+let qrInstance = null;
+
+function updatePreview() {
+  const d = getData();
+  const canvas = document.getElementById('cardCanvas');
+
+  let html = '';
+  if (currentTemplate === 'elegant-gold')  html = renderElegantGold(d);
+  if (currentTemplate === 'ivory-minimal') html = renderIvoryMinimal(d);
+  if (currentTemplate === 'burgundy-royal') html = renderBurgundyRoyal(d);
+
+  canvas.innerHTML = html;
+
+  // Generate QR code in card
+  const qrEl = document.getElementById('qrPreview');
+  if (qrEl && typeof QRCode !== 'undefined') {
+    try {
+      new QRCode(qrEl, {
+        text: d.website || `https://evenza.com/v/${d.name.toLowerCase().replace(/\s/g,'-')}`,
+        width: 56, height: 56,
+        colorDark: '#2A1A10', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.L
+      });
+    } catch(e) {}
+  }
+
+  // Main QR display
+  const mainQr = document.getElementById('qrcode-display');
+  mainQr.innerHTML = '';
+  if (typeof QRCode !== 'undefined') {
+    try {
+      new QRCode(mainQr, {
+        text: d.website || 'https://evenza.com',
+        width: 72, height: 72,
+        colorDark: '#2A1A10', colorLight: '#ffffff',
+        correctLevel: QRCode.CorrectLevel.M
+      });
+    } catch(e) {}
+  }
+}
+
+function setTemplate(name, el) {
+  currentTemplate = name;
+  document.querySelectorAll('.template-thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  updatePreview();
+}
+
+function setFont(font, el) {
+  currentFont = font;
+  document.querySelectorAll('.font-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  updatePreview();
+}
+
+function saveCard() {
+  showToast('Card saved successfully! 🎉', 'success');
+}
+
+function downloadCard() {
+  showToast('Preparing your card for download...', 'info');
+  setTimeout(() => showToast('Download ready! (In production, this generates a PNG/PDF)', 'success'), 1500);
+}
+
+function downloadQR() {
+  showToast('QR code downloaded!', 'success');
+}
+
+function shareWhatsApp() {
+  const name = document.getElementById('vcName').value;
+  const url = encodeURIComponent('https://evenza.com/card/kap-rzsh-4892');
+  const text = encodeURIComponent(`Hi! I'm ${name}. Check out my digital visiting card on Evenza: `);
+  window.open(`https://wa.me/?text=${text}${url}`, '_blank');
+}
+
+function copyShareLink() {
+  copyToClipboard('https://evenza.com/card/kap-rzsh-4892', 'Card link copied to clipboard!');
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(updatePreview, 200); // wait for QRCode lib
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Join Evenza — Register as a Vendor</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    body { background: var(--cream); min-height: 100vh; }
+
+    .auth-wrap {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      min-height: 100vh;
+    }
+
+    /* Left Panel */
+    .auth-left {
+      background: var(--burg-dark);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .auth-left-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.04;
+      background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9973A' fill-opacity='1'%3E%3Cpath d='M40 0l10 30 30 0-24 18 9 28-25-18-25 18 9-28L0 30l30 0z'/%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .auth-left-content { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; }
+
+    .auth-logo {
+      font-family: var(--font-display);
+      font-size: 26px;
+      font-style: italic;
+      color: var(--cream);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 48px;
+    }
+
+    .auth-logo-mark {
+      width: 38px; height: 38px;
+      background: var(--gold);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .auth-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 40px;
+    }
+
+    .auth-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 0;
+      position: relative;
+    }
+
+    .auth-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px; top: 42px;
+      width: 2px;
+      height: calc(100% - 14px);
+      background: rgba(201,151,58,0.15);
+    }
+
+    .auth-step.active::after { background: rgba(201,151,58,0.4); }
+
+    .step-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid rgba(201,151,58,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px;
+      color: rgba(245,239,224,0.4);
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+
+    .auth-step.active .step-dot {
+      border-color: var(--gold);
+      background: rgba(201,151,58,0.15);
+      color: var(--gold);
+    }
+
+    .auth-step.done .step-dot {
+      border-color: var(--success);
+      background: var(--success);
+      color: white;
+    }
+
+    .step-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(245,239,224,0.4);
+      margin-bottom: 2px;
+      transition: color 0.3s;
+    }
+
+    .auth-step.active .step-label { color: var(--cream); }
+    .auth-step.done .step-label   { color: rgba(245,239,224,0.6); }
+
+    .step-desc { font-size: 11px; color: rgba(245,239,224,0.25); }
+
+    .auth-benefits {
+      margin-top: auto;
+      padding-top: 32px;
+      border-top: 1px solid rgba(201,151,58,0.15);
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+
+    .benefit-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: rgba(201,151,58,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold);
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .benefit-text { font-size: 12px; color: rgba(245,239,224,0.5); }
+
+    /* Right Panel */
+    .auth-right {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      min-height: 100vh;
+    }
+
+    .auth-right-inner {
+      max-width: 540px;
+      margin: 0 auto;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Step Panels */
+    .step-panel { display: none; animation: fadeIn 0.4s ease; }
+    .step-panel.active { display: block; }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--burg);
+      margin-bottom: 6px;
+    }
+
+    .step-subtitle { font-size: 14px; color: var(--gray-500); margin-bottom: 32px; }
+
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* Category Grid */
+    .cat-select-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .cat-option {
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      padding: 12px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--t-fast);
+      background: var(--white);
+    }
+
+    .cat-option:hover { border-color: var(--burg-mid); background: var(--burg-pale); }
+
+    .cat-option.selected {
+      border-color: var(--burg);
+      background: var(--burg-light);
+    }
+
+    .cat-option-icon { font-size: 22px; margin-bottom: 6px; display: block; }
+    .cat-option-name { font-size: 11px; color: var(--dark); font-weight: 500; }
+
+    /* Image Upload Area */
+    .img-upload-area {
+      border: 2px dashed var(--gray-200);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--t-fast);
+      background: var(--gray-50);
+      position: relative;
+    }
+
+    .img-upload-area:hover, .img-upload-area.drag-over {
+      border-color: var(--burg-mid);
+      background: var(--burg-pale);
+    }
+
+    .img-upload-area input { display: none; }
+
+    .img-preview-circle {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 3px solid var(--gold);
+      object-fit: cover;
+      display: none;
+      margin: 0 auto 12px;
+    }
+
+    .img-preview-circle.visible { display: block; }
+
+    /* Progress Bar */
+    .form-progress {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 36px;
+    }
+
+    .progress-step {
+      flex: 1; height: 3px;
+      border-radius: 2px;
+      background: var(--gray-200);
+      transition: background 0.4s;
+    }
+
+    .progress-step.active { background: var(--burg); }
+    .progress-step.done   { background: var(--gold); }
+
+    /* OTP */
+    .otp-inputs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 24px 0;
+    }
+
+    .otp-input {
+      width: 52px; height: 60px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      font-size: 22px;
+      text-align: center;
+      font-family: var(--font-display);
+      color: var(--burg);
+      background: var(--white);
+      outline: none;
+      transition: all var(--t-fast);
+    }
+
+    .otp-input:focus { border-color: var(--burg); box-shadow: 0 0 0 3px rgba(107,26,42,0.08); }
+
+    /* SSO */
+    .sso-divider {
+      display: flex; align-items: center; gap: 14px;
+      color: var(--gray-400); font-size: 12px;
+      margin: 24px 0;
+    }
+    .sso-divider::before, .sso-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--gray-200);
+    }
+
+    .btn-sso {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 11px 20px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-sm);
+      background: var(--white);
+      font-size: 13px; color: var(--dark);
+      cursor: pointer;
+      transition: all var(--t-fast);
+      width: 100%;
+      font-family: var(--font-body);
+    }
+    .btn-sso:hover { border-color: var(--gray-400); background: var(--gray-50); }
+
+    @media (max-width: 900px) {
+      .auth-wrap { grid-template-columns: 1fr; }
+      .auth-left { display: none; }
+      .auth-right { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-wrap">
+  <!-- ============================
+       LEFT PANEL
+       ============================ -->
+  <div class="auth-left">
+    <div class="auth-left-pattern"></div>
+    <div class="auth-left-content">
+
+      <a href="index.html" class="auth-logo">
+        <div class="auth-logo-mark">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 1L11 6h5l-4 3 1.5 5L9 11.5 4.5 14 6 9 2 6h5z" fill="#2A1A10"/>
+          </svg>
+        </div>
+        <span><span style="color:var(--gold)">E</span>venza</span>
+      </a>
+
+      <div style="margin-bottom:12px;">
+        <div class="overline" style="color:var(--gold-mid);margin-bottom:8px;">Vendor Onboarding</div>
+        <h2 style="font-family:var(--font-display);font-style:italic;color:var(--cream);font-size:1.8rem;font-weight:400;">
+          Join 2,800+ event<br/>professionals on Evenza
+        </h2>
+      </div>
+
+      <!-- Steps Indicator -->
+      <div class="auth-steps" id="stepsIndicator">
+        <div class="auth-step active" data-for="1">
+          <div class="step-dot">1</div>
+          <div>
+            <div class="step-label">Personal Info</div>
+            <div class="step-desc">Your name, email & phone</div>
+          </div>
+        </div>
+        <div class="auth-step" data-for="2">
+          <div class="step-dot">2</div>
+          <div>
+            <div class="step-label">Business Details</div>
+            <div class="step-desc">Category, pricing & address</div>
+          </div>
+        </div>
+        <div class="auth-step" data-for="3">
+          <div class="step-dot">3</div>
+          <div>
+            <div class="step-label">Branding</div>
+            <div class="step-desc">Photos, logo & social links</div>
+          </div>
+        </div>
+        <div class="auth-step" data-for="4">
+          <div class="step-dot">4</div>
+          <div>
+            <div class="step-label">Verification</div>
+            <div class="step-desc">Verify email & go live</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-benefits">
+        <div style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:rgba(201,151,58,0.5);margin-bottom:12px;">What you get</div>
+        <div class="benefit-item">
+          <div class="benefit-icon">★</div>
+          <div class="benefit-text">Featured listing on India's top event platform</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">🪪</div>
+          <div class="benefit-text">Free premium digital visiting card</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">📊</div>
+          <div class="benefit-text">Analytics dashboard & booking management</div>
+        </div>
+        <div class="benefit-item">
+          <div class="benefit-icon">🆓</div>
+          <div class="benefit-text">No commission on first 5 bookings</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================
+       RIGHT PANEL
+       ============================ -->
+  <div class="auth-right">
+    <div class="auth-right-inner">
+
+      <!-- Progress -->
+      <div class="form-progress">
+        <div class="progress-step active" id="prog-1"></div>
+        <div class="progress-step" id="prog-2"></div>
+        <div class="progress-step" id="prog-3"></div>
+        <div class="progress-step" id="prog-4"></div>
+      </div>
+
+      <!-- ========== STEP 1: Personal Info ========== -->
+      <div class="step-panel active" id="step-1">
+        <div class="step-title">Let's get started</div>
+        <div class="step-subtitle">Create your vendor account in minutes. Free to join.</div>
+
+        <div class="sso-divider" style="margin-top:0;margin-bottom:20px;">
+          <span>Sign up with</span>
+        </div>
+        <button class="btn-sso" onclick="showToast('Google sign-in coming soon!','info')">
+          <svg width="18" height="18" viewBox="0 0 18 18"><path d="M17.64 9.2a10.34 10.34 0 00-.16-1.84H9v3.48h4.84A4.13 4.13 0 0112.2 13v2.19h2.51A7.6 7.6 0 0017.64 9.2z" fill="#4285F4"/><path d="M9 18c2.43 0 4.47-.8 5.96-2.18L12.45 13a4.8 4.8 0 01-7.14-2.52H2.73v2.26A9 9 0 009 18z" fill="#34A853"/><path d="M5.31 10.48A4.8 4.8 0 015.05 9c0-.52.09-1.02.26-1.48V5.26H2.73A9 9 0 000 9c0 1.45.34 2.82.95 4.04l2.36-1.83z" fill="#FBBC05"/><path d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58A9 9 0 002.73 5.26l2.58 2l .24-.78A4.8 4.8 0 019 3.58z" fill="#EA4335"/></svg>
+          Continue with Google
+        </button>
+
+        <div class="sso-divider">or fill in your details</div>
+
+        <div class="form-grid-2" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label" for="fullName">Full Name *</label>
+            <input type="text" id="fullName" class="form-control" placeholder="Rajesh Kapoor"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="businessName">Business Name *</label>
+            <input type="text" id="businessName" class="form-control" placeholder="Kapoor Photography"/>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" for="email">Email Address *</label>
+          <div class="input-group">
+            <svg class="input-group-icon" width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M2 3h12v10H2z" stroke="currentColor" stroke-width="1.3"/><path d="M2 3l6 5 6-5" stroke="currentColor" stroke-width="1.3"/></svg>
+            <input type="email" id="email" class="form-control" placeholder="you@example.com"/>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" for="phone">Phone Number *</label>
+          <div class="input-group">
+            <svg class="input-group-icon" width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M3 2h3l1.5 3.5L6 7s1 3 3 3l1.5-1.5L14 10v3c-6 1.5-12-5.5-11-11z" stroke="currentColor" stroke-width="1.3"/></svg>
+            <input type="tel" id="phone" class="form-control" placeholder="+91 98765 43210"/>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" for="password">Password *</label>
+          <div class="input-group">
+            <svg class="input-group-icon" width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3"/></svg>
+            <input type="password" id="password" class="form-control" placeholder="Min. 8 characters"/>
+            <button class="input-group-end" onclick="togglePw('password','eyeBtn1')" id="eyeBtn1" type="button">
+              <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M1 8s3-5 7-5 7 5 7 5-3 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/></svg>
+            </button>
+          </div>
+          <div class="pw-strength" id="pwBars">
+            <div class="pw-strength-bar"></div>
+            <div class="pw-strength-bar"></div>
+            <div class="pw-strength-bar"></div>
+            <div class="pw-strength-bar"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px;">
+            <div class="form-hint">Use uppercase, lowercase, number & symbol</div>
+            <div id="pwLabel" style="font-size:11px;font-weight:500;"></div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:20px;">
+          <label class="form-label" for="confirmPw">Confirm Password *</label>
+          <div class="input-group">
+            <svg class="input-group-icon" width="16" height="16" fill="none" viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3"/></svg>
+            <input type="password" id="confirmPw" class="form-control" placeholder="Re-enter password"/>
+          </div>
+        </div>
+
+        <div class="checkbox-group" style="margin-bottom:24px;">
+          <input type="checkbox" id="terms" class="form-check"/>
+          <label for="terms" style="font-size:13px;color:var(--gray-600);line-height:1.5;">
+            I agree to the <a href="#" style="color:var(--burg);">Terms of Service</a> and <a href="#" style="color:var(--burg);">Privacy Policy</a>
+          </label>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg" onclick="nextStep(1)" id="step1Btn">
+          Continue to Business Details
+          <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+
+        <p style="text-align:center;font-size:13px;color:var(--gray-400);margin-top:20px;">
+          Already have an account? <a href="login.html" style="color:var(--burg);font-weight:500;">Sign In</a>
+        </p>
+      </div>
+
+      <!-- ========== STEP 2: Business Details ========== -->
+      <div class="step-panel" id="step-2">
+        <div class="step-title">Your business</div>
+        <div class="step-subtitle">Tell us about your services so customers can find you easily.</div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label">Service Category *</label>
+          <div class="cat-select-grid" id="catGrid">
+            <div class="cat-option" onclick="selectCat(this,'Photographer')">
+              <span class="cat-option-icon">📷</span>
+              <div class="cat-option-name">Photographer</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Makeup Artist')">
+              <span class="cat-option-icon">💄</span>
+              <div class="cat-option-name">Makeup Artist</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Mehendi Artist')">
+              <span class="cat-option-icon">🖐</span>
+              <div class="cat-option-name">Mehendi Artist</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Caterer')">
+              <span class="cat-option-icon">🍽</span>
+              <div class="cat-option-name">Caterer</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Decorator')">
+              <span class="cat-option-icon">🌸</span>
+              <div class="cat-option-name">Decorator</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'DJ')">
+              <span class="cat-option-icon">🎵</span>
+              <div class="cat-option-name">DJ</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Wedding Planner')">
+              <span class="cat-option-icon">📋</span>
+              <div class="cat-option-name">Wedding Planner</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Venue')">
+              <span class="cat-option-icon">🏛</span>
+              <div class="cat-option-name">Venue</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Jewelry')">
+              <span class="cat-option-icon">💍</span>
+              <div class="cat-option-name">Jewelry</div>
+            </div>
+            <div class="cat-option" onclick="selectCat(this,'Others')">
+              <span class="cat-option-icon">✨</span>
+              <div class="cat-option-name">Others</div>
+            </div>
+          </div>
+          <input type="hidden" id="selectedCategory"/>
+        </div>
+
+        <div class="form-grid-2" style="margin:16px 0;">
+          <div class="form-group">
+            <label class="form-label" for="startPrice">Starting Price (₹)</label>
+            <input type="number" id="startPrice" class="form-control" placeholder="e.g. 15000"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="city">City *</label>
+            <select id="city" class="form-control form-select">
+              <option value="">Select city</option>
+              <option>Mumbai</option><option>Delhi</option><option>Bangalore</option>
+              <option>Chennai</option><option>Hyderabad</option><option>Pune</option>
+              <option>Kolkata</option><option>Jaipur</option><option>Ahmedabad</option>
+              <option>Surat</option><option>Kochi</option><option>Chandigarh</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" for="address">Business Address</label>
+          <input type="text" id="address" class="form-control" placeholder="Street, area, landmark"/>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" for="tagline">Business Tagline</label>
+          <input type="text" id="tagline" class="form-control" placeholder="e.g. Capturing love, one frame at a time"/>
+        </div>
+
+        <div class="form-group" style="margin-bottom:24px;">
+          <label class="form-label" for="bio">About Your Business</label>
+          <textarea id="bio" class="form-control" rows="3" placeholder="Tell customers about your experience, style, specializations..."></textarea>
+        </div>
+
+        <div style="display:flex;gap:12px;">
+          <button class="btn btn-outline-dark btn-lg" onclick="prevStep(2)" style="flex:0 0 120px;">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Back
+          </button>
+          <button class="btn btn-primary btn-lg" style="flex:1;" onclick="nextStep(2)">
+            Continue to Branding
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ========== STEP 3: Branding ========== -->
+      <div class="step-panel" id="step-3">
+        <div class="step-title">Your brand identity</div>
+        <div class="step-subtitle">Upload your photos and add your social presence. This builds trust with customers.</div>
+
+        <div class="form-grid-2" style="margin-bottom:20px;">
+          <div class="form-group">
+            <label class="form-label">Profile Photo *</label>
+            <div class="img-upload-area" onclick="document.getElementById('profilePic').click()">
+              <img id="profilePicPreview" class="img-preview-circle" src="" alt=""/>
+              <div id="profilePicPlaceholder">
+                <svg width="32" height="32" fill="none" viewBox="0 0 32 32" style="margin:0 auto 10px;color:var(--gray-300)"><circle cx="16" cy="12" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M4 28c0-6.6 5.4-12 12-12s12 5.4 12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <div style="font-size:12px;color:var(--gray-400);">Click to upload</div>
+                <div style="font-size:11px;color:var(--gray-300);margin-top:4px;">JPG, PNG up to 5MB</div>
+              </div>
+              <input type="file" id="profilePic" accept="image/*"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Business Logo</label>
+            <div class="img-upload-area" onclick="document.getElementById('businessLogo').click()">
+              <img id="logoPreview" class="img-preview-circle" src="" alt=""/>
+              <div id="logoPlaceholder">
+                <svg width="32" height="32" fill="none" viewBox="0 0 32 32" style="margin:0 auto 10px;color:var(--gray-300)"><rect x="4" y="8" width="24" height="18" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M10 14h12M10 19h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                <div style="font-size:12px;color:var(--gray-400);">Upload logo</div>
+                <div style="font-size:11px;color:var(--gray-300);margin-top:4px;">PNG with transparent BG</div>
+              </div>
+              <input type="file" id="businessLogo" accept="image/*"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label class="form-label" for="website">Website URL</label>
+          <div class="input-group">
+            <svg class="input-group-icon" width="16" height="16" fill="none" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M5 8c0-4 2-6 3-6M11 8c0-4-2-6-3-6M2 8h12" stroke="currentColor" stroke-width="1.3"/></svg>
+            <input type="url" id="website" class="form-control" placeholder="https://yourbusiness.com"/>
+          </div>
+        </div>
+
+        <div class="form-grid-2" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label class="form-label" for="instagram">Instagram</label>
+            <div class="input-group">
+              <span class="input-group-icon" style="font-size:14px;">📸</span>
+              <input type="text" id="instagram" class="form-control" placeholder="@yourhandle"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="facebook">Facebook Page</label>
+            <div class="input-group">
+              <span class="input-group-icon" style="font-size:14px;">📘</span>
+              <input type="text" id="facebook" class="form-control" placeholder="facebook.com/yourpage"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-grid-2" style="margin-bottom:24px;">
+          <div class="form-group">
+            <label class="form-label" for="youtube">YouTube</label>
+            <input type="text" id="youtube" class="form-control" placeholder="youtube.com/channel/..."/>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="whatsapp">WhatsApp Business</label>
+            <input type="tel" id="whatsapp" class="form-control" placeholder="+91 98765 43210"/>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;">
+          <button class="btn btn-outline-dark btn-lg" onclick="prevStep(3)" style="flex:0 0 120px;">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M13 8H3M7 4L3 8l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Back
+          </button>
+          <button class="btn btn-primary btn-lg" style="flex:1;" onclick="submitRegistration()" id="submitBtn">
+            Create My Vendor Account
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- ========== STEP 4: OTP Verification ========== -->
+      <div class="step-panel" id="step-4">
+        <div style="text-align:center;">
+          <div style="width:72px;height:72px;background:var(--success-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <svg width="32" height="32" fill="none" viewBox="0 0 32 32"><path d="M4 16h6l4 12L22 8l4 8h6" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="step-title">Verify your email</div>
+          <div class="step-subtitle">
+            We've sent a 6-digit code to<br/>
+            <strong id="verifyEmail" style="color:var(--burg);">you@example.com</strong>
+          </div>
+        </div>
+
+        <div class="otp-inputs" id="otpContainer">
+          <input class="otp-input" data-otp type="text" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" data-otp type="text" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" data-otp type="text" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" data-otp type="text" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" data-otp type="text" maxlength="1" inputmode="numeric"/>
+          <input class="otp-input" data-otp type="text" maxlength="1" inputmode="numeric"/>
+        </div>
+
+        <button class="btn btn-primary btn-block btn-lg" onclick="verifyOtp()" id="verifyBtn">
+          Verify & Activate Account
+        </button>
+
+        <div style="text-align:center;margin-top:16px;">
+          <span style="font-size:13px;color:var(--gray-400);">Didn't receive the code?</span>
+          <button onclick="resendOtp()" style="background:none;border:none;color:var(--burg);font-size:13px;font-weight:500;cursor:pointer;margin-left:6px;">Resend</button>
+          <div id="otpTimer" style="font-size:11px;color:var(--gray-400);margin-top:6px;"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/main.js"></script>
+<script>
+  let currentStep = 1;
+  let selectedCat = '';
+  let getOtp;
+
+  // Init
+  initPasswordStrength('password','pwBars','pwLabel');
+  getOtp = initOtpInputs('#otpContainer');
+
+  // Image previews
+  setupImagePreview('profilePic', 'profilePicPreview', 'profilePicPlaceholder');
+  setupImagePreview('businessLogo', 'logoPreview', 'logoPlaceholder');
+
+  function setupImagePreview(inputId, previewId, placeholderId) {
+    document.getElementById(inputId).addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const img = document.getElementById(previewId);
+        img.src = ev.target.result;
+        img.classList.add('visible');
+        document.getElementById(placeholderId).style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function togglePw(inputId, btnId) {
+    const inp = document.getElementById(inputId);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  function selectCat(el, name) {
+    document.querySelectorAll('.cat-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedCat = name;
+    document.getElementById('selectedCategory').value = name;
+  }
+
+  function goToStep(n) {
+    document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+
+    // Update progress bars
+    for (let i = 1; i <= 4; i++) {
+      const bar = document.getElementById('prog-' + i);
+      bar.classList.remove('active', 'done');
+      if (i < n) bar.classList.add('done');
+      if (i === n) bar.classList.add('active');
+    }
+
+    // Update left panel steps
+    document.querySelectorAll('.auth-step').forEach(s => {
+      const idx = parseInt(s.dataset.for);
+      s.classList.remove('active', 'done');
+      if (idx < n) s.classList.add('done');
+      if (idx === n) s.classList.add('active');
+    });
+
+    currentStep = n;
+    window.scrollTo(0, 0);
+  }
+
+  function nextStep(from) {
+    if (from === 1) {
+      const name = document.getElementById('fullName').value.trim();
+      const biz  = document.getElementById('businessName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const pw    = document.getElementById('password').value;
+      const cpw   = document.getElementById('confirmPw').value;
+      const terms = document.getElementById('terms').checked;
+
+      if (!name)  { showToast('Please enter your full name', 'error'); return; }
+      if (!biz)   { showToast('Please enter your business name', 'error'); return; }
+      if (!email || !validateEmail(email)) { showToast('Please enter a valid email', 'error'); return; }
+      if (!phone) { showToast('Please enter your phone number', 'error'); return; }
+      if (pw.length < 8) { showToast('Password must be at least 8 characters', 'error'); return; }
+      if (pw !== cpw)    { showToast('Passwords do not match', 'error'); return; }
+      if (!terms)        { showToast('Please accept the terms & conditions', 'error'); return; }
+    }
+
+    if (from === 2) {
+      if (!selectedCat) { showToast('Please select your service category', 'error'); return; }
+      if (!document.getElementById('city').value) { showToast('Please select your city', 'error'); return; }
+    }
+
+    goToStep(from + 1);
+  }
+
+  function prevStep(from) {
+    goToStep(from - 1);
+  }
+
+  async function submitRegistration() {
+    setLoading('submitBtn', true);
+
+    const payload = {
+      fullName:     document.getElementById('fullName').value,
+      businessName: document.getElementById('businessName').value,
+      email:        document.getElementById('email').value,
+      phone:        document.getElementById('phone').value,
+      password:     document.getElementById('password').value,
+      categoryName: selectedCat,
+      city:         document.getElementById('city').value,
+      tagline:      document.getElementById('tagline').value,
+      bio:          document.getElementById('bio').value,
+    };
+
+    try {
+      const res = await fetch('/api/auth/vendor/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        document.getElementById('verifyEmail').textContent = payload.email;
+        goToStep(4);
+        startOtpTimer();
+        showToast('Account created! Please verify your email.', 'success');
+      } else {
+        showToast(data.error || 'Registration failed. Try again.', 'error');
+      }
+    } catch(e) {
+      // Demo: proceed to OTP step
+      document.getElementById('verifyEmail').textContent = document.getElementById('email').value;
+      goToStep(4);
+      startOtpTimer();
+      showToast('Account created! Check your email for the OTP.', 'success');
+    }
+
+    setLoading('submitBtn', false);
+  }
+
+  async function verifyOtp() {
+    const otp = getOtp ? getOtp() : '';
+    if (otp.length < 6) { showToast('Please enter the 6-digit OTP', 'error'); return; }
+    setLoading('verifyBtn', true);
+
+    try {
+      const res = await fetch('/api/auth/otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          identifier: document.getElementById('email').value,
+          otpCode: otp
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('Email verified successfully! Redirecting...', 'success');
+        setTimeout(() => window.location.href = 'dashboard.html', 1500);
+      } else {
+        showToast('Invalid OTP. Please try again.', 'error');
+      }
+    } catch(e) {
+      // Demo mode
+      showToast('Email verified! Welcome to Evenza 🎉', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 1500);
+    }
+
+    setLoading('verifyBtn', false);
+  }
+
+  function resendOtp() {
+    showToast('OTP resent to your email!', 'info');
+    startOtpTimer();
+  }
+
+  function startOtpTimer() {
+    let seconds = 60;
+    const timerEl = document.getElementById('otpTimer');
+    const interval = setInterval(() => {
+      seconds--;
+      timerEl.textContent = `Resend available in ${seconds}s`;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        timerEl.textContent = '';
+      }
+    }, 1000);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evenza Vendor — Premium Wedding & Event Vendor Platform</title>
+  <meta name="description" content="India's most trusted marketplace to discover verified wedding and event vendors. Find photographers, decorators, caterers & more.">
+  <meta property="og:title" content="Evenza Vendor — Premium Wedding Platform">
+  <meta property="og:description" content="Discover India's finest event professionals">
+  <meta name="theme-color" content="#6B1A2A">
+  <link rel="stylesheet" href="../css/main.css" />
+  <style>
+    /* ---- Page-specific enhancements ---- */
+    .hero-search-wrap { margin-top: 36px; }
+
+    .trending-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 20px;
+      background: rgba(201,151,58,0.15);
+      border: 1px solid rgba(201,151,58,0.25);
+      font-size: 12px; color: var(--gold-mid);
+      cursor: pointer; transition: all var(--t-fast);
+      text-decoration: none;
+    }
+    .trending-tag:hover { background: rgba(201,151,58,0.25); color: var(--cream); }
+
+    .why-card {
+      padding: 32px 28px;
+      border-radius: var(--radius);
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      transition: all var(--t-slow);
+    }
+    .why-card:hover {
+      border-color: var(--burg-mid);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+    .why-icon {
+      width: 56px; height: 56px;
+      border-radius: var(--radius);
+      background: var(--burg-light);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--burg);
+      font-size: 24px;
+      margin-bottom: 18px;
+      transition: all var(--t-base);
+    }
+    .why-card:hover .why-icon { background: var(--burg); color: var(--cream); }
+
+    .testimonial-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      border: 1px solid var(--gray-200);
+      transition: all var(--t-base);
+    }
+    .testimonial-card:hover { box-shadow: var(--shadow); }
+    .testimonial-quote {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .testimonial-text {
+      font-size: 14px;
+      color: var(--gray-600);
+      line-height: 1.75;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    .stat-counter-wrap {
+      background: var(--burg);
+      padding: 60px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .stat-counter-wrap::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23C9973A' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    .counter-val {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 500;
+      color: var(--cream);
+    }
+    .counter-label {
+      font-size: 14px;
+      color: rgba(245,239,224,0.6);
+      margin-top: 4px;
+    }
+
+    .cta-section {
+      background: var(--dark);
+      padding: 80px 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .mobile-nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .mobile-nav-toggle span {
+      width: 22px; height: 2px;
+      background: var(--cream);
+      border-radius: 1px;
+      transition: all var(--t-fast);
+    }
+    .navbar.scrolled .mobile-nav-toggle span { background: var(--dark); }
+
+    @media (max-width: 900px) { .mobile-nav-toggle { display: flex; } }
+
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--burg-dark);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      transform: translateX(100%);
+      transition: transform var(--t-slow);
+    }
+    .mobile-menu.open { transform: translateX(0); }
+  </style>
+</head>
+<body>
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 1L11 6h5l-4 3 1.5 5L9 11.5 4.5 14 6 9 2 6h5z" fill="#F5EFE0"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text"><span class="ev-accent">E</span>venza</span>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="index.html" class="nav-link active">Home</a></li>
+      <li><a href="vendors.html" class="nav-link">Find Vendors</a></li>
+      <li><a href="about.html" class="nav-link">About</a></li>
+      <li><a href="register.html" class="nav-link">Join as Vendor</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-outline btn-sm">Sign In</a>
+      <a href="register.html" class="btn btn-gold btn-sm">Get Started</a>
+      <div class="mobile-nav-toggle" id="menuToggle">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div style="display:flex; justify-content:flex-end; margin-bottom:32px;">
+    <button onclick="toggleMenu()" style="background:none;border:none;color:var(--cream);font-size:24px;">✕</button>
+  </div>
+  <a href="index.html" class="sidebar-item" style="font-size:18px;margin-bottom:8px;">Home</a>
+  <a href="vendors.html" class="sidebar-item" style="font-size:18px;margin-bottom:8px;">Find Vendors</a>
+  <a href="about.html" class="sidebar-item" style="font-size:18px;margin-bottom:8px;">About</a>
+  <a href="register.html" class="sidebar-item" style="font-size:18px;margin-bottom:8px;">Join as Vendor</a>
+  <div style="margin-top:auto; display:flex; flex-direction:column; gap:10px;">
+    <a href="login.html" class="btn btn-outline btn-lg">Sign In</a>
+    <a href="register.html" class="btn btn-gold btn-lg">Get Started</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     HERO SECTION
+     ============================================================ -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-overlay"></div>
+  </div>
+  <div class="hero-image">
+    <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80" alt="Wedding" loading="eager"/>
+  </div>
+
+  <div class="container" style="position:relative;z-index:2;">
+    <div class="hero-content animate-slide-up">
+      <div class="overline">India's Premium Vendor Marketplace</div>
+      <div class="hero-gold-line"></div>
+
+      <h1 class="hero-title">
+        Make Your <strong>Dream Event</strong><br/>
+        Come to <em>Life</em>
+      </h1>
+
+      <p class="hero-subtitle">
+        Discover 2,800+ verified wedding and event professionals across 40+ cities.
+        Photographers, decorators, caterers and more — all in one elegant platform.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="hero-search-wrap animate-slide-up" data-delay="2">
+        <div class="search-bar">
+          <div class="search-field">
+            <svg width="18" height="18" fill="none" viewBox="0 0 18 18" style="color:var(--gray-400);flex-shrink:0"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="12" x2="16" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <input type="text" placeholder="Search photographers, decorators..." id="searchQuery" />
+          </div>
+          <div class="search-field" style="border-right:none; max-width:180px;">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16" style="color:var(--gray-400);flex-shrink:0"><path d="M8 1C5.2 1 3 3.2 3 6c0 4 5 9 5 9s5-5 5-9c0-2.8-2.2-5-5-5zm0 6.5a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="currentColor"/></svg>
+            <select id="searchCity" class="form-select" style="border:none;outline:none;font-size:14px;color:var(--dark);background:transparent;padding-right:20px;cursor:pointer;">
+              <option value="">All Cities</option>
+              <option>Mumbai</option><option>Delhi</option><option>Bangalore</option>
+              <option>Chennai</option><option>Hyderabad</option><option>Pune</option>
+              <option>Kolkata</option><option>Jaipur</option><option>Ahmedabad</option>
+            </select>
+          </div>
+          <button class="search-btn" onclick="doSearch()">
+            <svg width="16" height="16" fill="none" viewBox="0 0 16 16" style="display:inline;margin-right:6px"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><line x1="10" y1="10" x2="14" y2="14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Search Vendors
+          </button>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:10px;margin-top:16px;flex-wrap:wrap;">
+          <span style="font-size:12px;color:rgba(245,239,224,0.4);">Trending:</span>
+          <a class="trending-tag" href="vendors.html?cat=photographer">Photographers</a>
+          <a class="trending-tag" href="vendors.html?cat=decorator">Decorators</a>
+          <a class="trending-tag" href="vendors.html?cat=caterer">Caterers</a>
+          <a class="trending-tag" href="vendors.html?cat=wedding-planner">Wedding Planners</a>
+        </div>
+      </div>
+
+      <!-- Hero Stats -->
+      <div class="hero-stats animate-slide-up" data-delay="3">
+        <div>
+          <div class="hero-stat-val" id="countVendors">2,800+</div>
+          <div class="hero-stat-label">Verified Vendors</div>
+        </div>
+        <div>
+          <div class="hero-stat-val" id="countEvents">18,000+</div>
+          <div class="hero-stat-label">Events Completed</div>
+        </div>
+        <div>
+          <div class="hero-stat-val" id="countCities">40+</div>
+          <div class="hero-stat-label">Cities Covered</div>
+        </div>
+        <div>
+          <div class="hero-stat-val">★ 4.9</div>
+          <div class="hero-stat-label">Average Rating</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div style="position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;animation:slideUp 1.5s ease infinite alternate;">
+    <svg width="20" height="28" viewBox="0 0 20 28" fill="none">
+      <rect x="1" y="1" width="18" height="26" rx="9" stroke="rgba(245,239,224,0.3)" stroke-width="1.5"/>
+      <circle cx="10" cy="8" r="3" fill="rgba(201,151,58,0.8)"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ============================================================
+     CATEGORY SECTION
+     ============================================================ -->
+<section class="section" style="background:var(--ivory);">
+  <div class="container">
+    <div class="section-header" data-reveal>
+      <span class="overline">Browse by Service</span>
+      <h2>What are you looking for?</h2>
+      <p>From intimate ceremonies to grand celebrations — find the perfect professional for every event need.</p>
+    </div>
+
+    <div class="category-grid" id="categoryGrid">
+      <!-- Categories loaded via JS -->
+      <div class="category-card skeleton" style="height:130px;"></div>
+      <div class="category-card skeleton" style="height:130px;"></div>
+      <div class="category-card skeleton" style="height:130px;"></div>
+      <div class="category-card skeleton" style="height:130px;"></div>
+      <div class="category-card skeleton" style="height:130px;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURED VENDORS
+     ============================================================ -->
+<section class="section" style="background:var(--cream);" id="featuredSection">
+  <div class="container">
+    <div class="section-header" data-reveal>
+      <span class="overline">Hand-picked Excellence</span>
+      <h2>Featured <span class="gold-underline">Vendors</span></h2>
+      <p>Carefully curated, highly rated professionals trusted by thousands of happy couples and event planners.</p>
+    </div>
+
+    <div class="grid grid-4" id="vendorGrid" style="gap:20px;">
+      <!-- Skeletons -->
+      <div class="vendor-card"><div class="skeleton" style="height:200px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin-bottom:8px;width:70%;"></div><div class="skeleton" style="height:12px;width:50%;"></div></div></div>
+      <div class="vendor-card"><div class="skeleton" style="height:200px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin-bottom:8px;width:70%;"></div><div class="skeleton" style="height:12px;width:50%;"></div></div></div>
+      <div class="vendor-card"><div class="skeleton" style="height:200px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin-bottom:8px;width:70%;"></div><div class="skeleton" style="height:12px;width:50%;"></div></div></div>
+      <div class="vendor-card"><div class="skeleton" style="height:200px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin-bottom:8px;width:70%;"></div><div class="skeleton" style="height:12px;width:50%;"></div></div></div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;">
+      <a href="vendors.html" class="btn btn-outline-dark btn-lg">
+        View All Vendors
+        <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     COUNTER STATS
+     ============================================================ -->
+<section class="stat-counter-wrap">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;" class="stats-grid">
+      <div data-reveal>
+        <div class="counter-val" data-target="2847" data-suffix="+">0</div>
+        <div class="counter-label">Registered Vendors</div>
+      </div>
+      <div data-reveal data-delay="1">
+        <div class="counter-val" data-target="18250" data-suffix="+">0</div>
+        <div class="counter-label">Events Completed</div>
+      </div>
+      <div data-reveal data-delay="2">
+        <div class="counter-val" data-target="40" data-suffix="+">0</div>
+        <div class="counter-label">Cities Covered</div>
+      </div>
+      <div data-reveal data-delay="3">
+        <div class="counter-val" data-target="97" data-suffix="%">0</div>
+        <div class="counter-label">Client Satisfaction</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     WHY EVENZA
+     ============================================================ -->
+<section class="section" style="background:var(--ivory);">
+  <div class="container">
+    <div class="section-header" data-reveal>
+      <span class="overline">Why Choose Us</span>
+      <h2>The Evenza <span class="gold-underline">Difference</span></h2>
+      <p>We don't just connect you with vendors. We curate exceptional experiences.</p>
+    </div>
+
+    <div class="grid grid-3" style="gap:24px;">
+      <div class="why-card" data-reveal>
+        <div class="why-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-size:1.25rem;margin-bottom:10px;">Verified Professionals</h3>
+        <p style="font-size:14px;color:var(--gray-500);line-height:1.7;">Every vendor undergoes a thorough background check, portfolio review, and identity verification before being listed on Evenza.</p>
+      </div>
+      <div class="why-card" data-reveal data-delay="1">
+        <div class="why-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.05 10.1c-.783-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <h3 style="font-size:1.25rem;margin-bottom:10px;">Genuine Reviews</h3>
+        <p style="font-size:14px;color:var(--gray-500);line-height:1.7;">Only verified customers who've actually worked with a vendor can leave reviews — ensuring you get honest, authentic feedback.</p>
+      </div>
+      <div class="why-card" data-reveal data-delay="2">
+        <div class="why-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-size:1.25rem;margin-bottom:10px;">Easy Booking</h3>
+        <p style="font-size:14px;color:var(--gray-500);line-height:1.7;">Send booking inquiries in minutes. Track responses, manage bookings, and communicate with vendors all in one place.</p>
+      </div>
+      <div class="why-card" data-reveal>
+        <div class="why-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-size:1.25rem;margin-bottom:10px;">Secure Payments</h3>
+        <p style="font-size:14px;color:var(--gray-500);line-height:1.7;">Your payments are protected. Funds are held securely and only released to vendors once you're satisfied with the service.</p>
+      </div>
+      <div class="why-card" data-reveal data-delay="1">
+        <div class="why-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8zM23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3 style="font-size:1.25rem;margin-bottom:10px;">Dedicated Support</h3>
+        <p style="font-size:14px;color:var(--gray-500);line-height:1.7;">Our event concierge team is available 7 days a week to help you find the perfect vendor match for your vision and budget.</p>
+      </div>
+      <div class="why-card" data-reveal data-delay="2">
+        <div class="why-icon">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3 style="font-size:1.25rem;margin-bottom:10px;">AI-Powered Matching</h3>
+        <p style="font-size:14px;color:var(--gray-500);line-height:1.7;">Our smart recommendation engine learns your preferences and budget to suggest the most compatible vendors for your dream event.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     TESTIMONIALS
+     ============================================================ -->
+<section class="section" style="background:var(--cream);">
+  <div class="container">
+    <div class="section-header" data-reveal>
+      <span class="overline">Client Love</span>
+      <h2>Stories of <span class="gold-underline">Joy</span></h2>
+      <p>Thousands of happy couples and event hosts share their Evenza experience.</p>
+    </div>
+
+    <div class="grid grid-3" style="gap:20px;">
+      <div class="testimonial-card" data-reveal>
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Evenza transformed our wedding planning journey. We found our dream photographer and decorator through the platform. The quality was beyond our expectations!</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+          <img src="https://ui-avatars.com/api/?name=Priya+Sharma&background=C9973A&color=fff&size=44" style="width:44px;height:44px;border-radius:50%;object-fit:cover;" alt="Priya"/>
+          <div>
+            <div style="font-weight:500;font-size:14px;">Priya & Rahul Sharma</div>
+            <div style="font-size:12px;color:var(--gray-400);">Wedding · Mumbai</div>
+            <div style="color:var(--gold);font-size:12px;margin-top:2px;">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-reveal data-delay="1">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">As a corporate event planner, I've used Evenza for over 15 events now. The vendor quality, communication, and booking process is absolutely seamless.</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+          <img src="https://ui-avatars.com/api/?name=Ananya+Krishnan&background=6B1A2A&color=fff&size=44" style="width:44px;height:44px;border-radius:50%;" alt="Ananya"/>
+          <div>
+            <div style="font-weight:500;font-size:14px;">Ananya Krishnan</div>
+            <div style="font-size:12px;color:var(--gray-400);">Event Planner · Bangalore</div>
+            <div style="color:var(--gold);font-size:12px;margin-top:2px;">★★★★★</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card" data-reveal data-delay="2">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The digital visiting card feature for vendors is brilliant. My clients can scan my QR code and instantly see my full portfolio. Game changer!</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+          <img src="https://ui-avatars.com/api/?name=Vikram+Nair&background=2A1A10&color=C9973A&size=44" style="width:44px;height:44px;border-radius:50%;" alt="Vikram"/>
+          <div>
+            <div style="font-weight:500;font-size:14px;">Vikram Nair</div>
+            <div style="font-size:12px;color:var(--gray-400);">Photographer · Kochi</div>
+            <div style="color:var(--gold);font-size:12px;margin-top:2px;">★★★★★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CTA SECTION
+     ============================================================ -->
+<section class="cta-section">
+  <div class="container" style="position:relative;z-index:1;">
+    <div style="max-width:600px;margin:0 auto;" data-reveal>
+      <span class="overline" style="color:var(--gold-mid);">Join the Platform</span>
+      <h2 style="font-family:var(--font-display);font-style:italic;color:var(--cream);font-size:clamp(2rem,4vw,3.2rem);margin:16px 0;">
+        Are you an Event Professional?
+      </h2>
+      <p style="color:rgba(245,239,224,0.6);font-size:15px;margin-bottom:36px;line-height:1.7;">
+        List your services on Evenza and reach thousands of couples and event planners actively searching for your expertise. Free to join, no setup fees.
+      </p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <a href="register.html" class="btn btn-gold btn-xl">
+          Join as Vendor — It's Free
+          <svg width="16" height="16" fill="none" viewBox="0 0 16 16"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <a href="about.html" class="btn btn-outline btn-xl">Learn More</a>
+      </div>
+      <div style="margin-top:20px;font-size:12px;color:rgba(245,239,224,0.3);">
+        ✓ Free registration &nbsp; ✓ No commission on first 5 bookings &nbsp; ✓ Professional digital card included
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1.5fr;gap:48px;padding-bottom:24px;">
+
+      <!-- Brand Column -->
+      <div>
+        <div class="footer-logo"><span style="color:var(--gold)">E</span>venza</div>
+        <p class="footer-tagline">India's premium marketplace for wedding and event professionals. Where elegance meets excellence.</p>
+        <div class="social-links">
+          <a href="#" class="social-btn" aria-label="Instagram">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="Facebook">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="LinkedIn">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="YouTube">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+          </a>
+          <a href="#" class="social-btn" aria-label="Pinterest">
+            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="about.html" class="footer-link">About Us</a></li>
+          <li><a href="#" class="footer-link">Careers</a></li>
+          <li><a href="#" class="footer-link">Blog</a></li>
+          <li><a href="#" class="footer-link">Press</a></li>
+          <li><a href="#" class="footer-link">Partnerships</a></li>
+        </ul>
+      </div>
+
+      <!-- Support -->
+      <div>
+        <div class="footer-heading">Support</div>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">Help Center</a></li>
+          <li><a href="#" class="footer-link">Contact Support</a></li>
+          <li><a href="#" class="footer-link">FAQs</a></li>
+          <li><a href="#" class="footer-link">Privacy Policy</a></li>
+          <li><a href="#" class="footer-link">Terms & Conditions</a></li>
+        </ul>
+      </div>
+
+      <!-- Vendor Services -->
+      <div>
+        <div class="footer-heading">For Vendors</div>
+        <ul class="footer-links">
+          <li><a href="register.html" class="footer-link">Become a Vendor</a></li>
+          <li><a href="#" class="footer-link">Vendor Packages</a></li>
+          <li><a href="#" class="footer-link">Verification Process</a></li>
+          <li><a href="#" class="footer-link">Pricing Plans</a></li>
+          <li><a href="dashboard.html" class="footer-link">Vendor Dashboard</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact & Newsletter -->
+      <div>
+        <div class="footer-heading">Stay Connected</div>
+        <p style="font-size:12px;color:rgba(245,239,224,0.4);margin-bottom:12px;">Get vendor tips, event trends & platform updates.</p>
+        <div class="newsletter-form" style="margin-bottom:20px;">
+          <input type="email" class="newsletter-input" placeholder="Enter your email" id="footerEmail"/>
+          <button class="newsletter-btn" onclick="subscribeNewsletter()">Subscribe</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(245,239,224,0.45);">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14" style="flex-shrink:0"><path d="M7 1C3.7 1 1 3.7 1 7c0 3.3 2.7 6 6 6s6-2.7 6-6c0-3.3-2.7-6-6-6zm0 2.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM7 12c-1.7 0-3.2-.8-4.2-2.1.5-1.1 2.3-1.9 4.2-1.9s3.7.8 4.2 1.9C10.2 11.2 8.7 12 7 12z" fill="currentColor"/></svg>
+            123 Bandra West, Mumbai 400050
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(245,239,224,0.45);">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14" style="flex-shrink:0"><path d="M2 2h3l1.5 3L5 6.5s1 3 3 3l1.5-1.5L13 9.5v3c-7 1-12-5.5-11-10.5z" stroke="currentColor" stroke-width="1.2"/></svg>
+            +91 98765 00000
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(245,239,224,0.45);">
+            <svg width="14" height="14" fill="none" viewBox="0 0 14 14" style="flex-shrink:0"><path d="M2 3h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 3l5 5 5-5" stroke="currentColor" stroke-width="1.2"/></svg>
+            hello@evenza.com
+          </div>
+          <div style="font-size:11px;color:rgba(245,239,224,0.3);margin-top:4px;">Mon–Sat: 9AM – 7PM IST</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-gold-divider"></div>
+
+    <div class="footer-bottom">
+      <div class="footer-copyright">
+        © 2024 Evenza Vendor Pvt. Ltd. All rights reserved. Made with ♥ in India.
+      </div>
+      <div style="display:flex;gap:20px;">
+        <a href="#" style="font-size:11px;color:rgba(245,239,224,0.3);" class="footer-link">Privacy</a>
+        <a href="#" style="font-size:11px;color:rgba(245,239,224,0.3);" class="footer-link">Terms</a>
+        <a href="#" style="font-size:11px;color:rgba(245,239,224,0.3);" class="footer-link">Sitemap</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Float -->
+<a href="https://wa.me/919876500000" class="whatsapp-float" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg width="26" height="26" fill="white" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/main.js"></script>
+<script>
+  // Page-specific initialization
+  document.addEventListener('DOMContentLoaded', () => {
+    loadCategories();
+    loadFeaturedVendors();
+    initScrollReveal();
+    initCounters();
+    initNavbarScroll();
+  });
+
+  function doSearch() {
+    const q = document.getElementById('searchQuery').value;
+    const city = document.getElementById('searchCity').value;
+    window.location.href = `vendors.html?q=${encodeURIComponent(q)}&city=${encodeURIComponent(city)}`;
+  }
+
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.body.classList.toggle('no-scroll');
+  }
+  document.getElementById('menuToggle').addEventListener('click', toggleMenu);
+
+  async function loadCategories() {
+    const grid = document.getElementById('categoryGrid');
+    const icons = {
+      'photographer':'📷','makeup-artist':'💄','mehendi-artist':'🖐','caterer':'🍽',
+      'decorator':'🌸','dj':'🎵','wedding-planner':'📋','venue':'🏛','jewelry':'💍','others':'✨'
+    };
+    try {
+      const res = await fetch('/api/categories').catch(() => null);
+      let cats;
+      if (res && res.ok) {
+        const data = await res.json();
+        cats = data.data;
+      } else {
+        cats = [
+          {id:1,name:'Photographer',slug:'photographer',vendorCount:680},
+          {id:2,name:'Makeup Artist',slug:'makeup-artist',vendorCount:420},
+          {id:3,name:'Mehendi Artist',slug:'mehendi-artist',vendorCount:310},
+          {id:4,name:'Caterer',slug:'caterer',vendorCount:350},
+          {id:5,name:'Decorator',slug:'decorator',vendorCount:290},
+          {id:6,name:'DJ',slug:'dj',vendorCount:180},
+          {id:7,name:'Wedding Planner',slug:'wedding-planner',vendorCount:240},
+          {id:8,name:'Venue',slug:'venue',vendorCount:160},
+          {id:9,name:'Jewelry',slug:'jewelry',vendorCount:140},
+          {id:10,name:'Others',slug:'others',vendorCount:120}
+        ];
+      }
+      grid.innerHTML = cats.map(c => `
+        <a href="vendors.html?cat=${c.slug}" class="category-card animate-scale-in">
+          <div class="category-icon-wrap">${icons[c.slug]||'✨'}</div>
+          <div class="category-name">${c.name}</div>
+          <div class="category-count">${c.vendorCount}+ vendors</div>
+        </a>`).join('');
+    } catch(e) {
+      grid.innerHTML = '<p style="color:var(--gray-400);grid-column:1/-1;text-align:center;">Could not load categories</p>';
+    }
+  }
+
+  async function loadFeaturedVendors() {
+    const grid = document.getElementById('vendorGrid');
+    try {
+      const res = await fetch('/api/vendors/public/featured?limit=8').catch(() => null);
+      let vendors;
+      if (res && res.ok) {
+        const data = await res.json();
+        vendors = data.data;
+      } else {
+        vendors = [
+          {id:1,businessName:'Kapoor Photography',category:'Photographer',city:'Mumbai',avgRating:4.9,totalReviews:156,startingPrice:45000,isVerified:true,isFeatured:true},
+          {id:2,businessName:'Bloom Decorations',category:'Decorator',city:'Delhi',avgRating:4.8,totalReviews:98,startingPrice:35000,isVerified:true,isFeatured:true},
+          {id:3,businessName:'Divine Caterers',category:'Caterer',city:'Bangalore',avgRating:4.7,totalReviews:210,startingPrice:800,isVerified:true,isFeatured:false},
+          {id:4,businessName:'Glamour Makeup',category:'Makeup Artist',city:'Chennai',avgRating:4.9,totalReviews:340,startingPrice:15000,isVerified:true,isFeatured:true},
+        ];
+      }
+      grid.innerHTML = vendors.map((v, i) => `
+        <div class="vendor-card animate-fade-in" style="animation-delay:${i*0.1}s" onclick="window.location.href='vendor-profile.html?id=${v.id}'">
+          <div class="vendor-card-img-placeholder" style="height:180px;">
+            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(v.businessName)}&background=6B1A2A&color=F5EFE0&size=120" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--gold-mid);" alt="${v.businessName}"/>
+            <div class="vendor-card-badge">
+              ${v.isVerified ? '<span class="badge badge-verified">✓ Verified</span>' : ''}
+              ${v.isFeatured ? '<span class="badge badge-gold">★ Featured</span>' : ''}
+            </div>
+          </div>
+          <div class="vendor-card-body">
+            <div class="vendor-card-category">${v.category}</div>
+            <div class="vendor-card-name">${v.businessName}</div>
+            <div style="display:flex;align-items:center;gap:6px;margin:6px 0;font-size:12px;color:var(--gray-400);">
+              <svg width="12" height="12" fill="none" viewBox="0 0 12 12"><path d="M6 1C4 1 2.5 2.5 2.5 4.5 2.5 7.5 6 11 6 11s3.5-3.5 3.5-6.5C9.5 2.5 8 1 6 1zm0 5a1.5 1.5 0 110-3 1.5 1.5 0 010 3z" fill="currentColor"/></svg>
+              ${v.city}
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+              <div class="rating">
+                <span style="color:var(--gold);font-size:13px;">★ ${v.avgRating}</span>
+                <span style="font-size:11px;color:var(--gray-400);">(${v.totalReviews})</span>
+              </div>
+              <div style="font-family:var(--font-display);font-size:14px;color:var(--burg);">
+                ₹${Number(v.startingPrice).toLocaleString('en-IN')}+
+              </div>
+            </div>
+            <button class="btn btn-primary btn-sm w-full" style="margin-top:12px;">View Profile</button>
+          </div>
+        </div>`).join('');
+    } catch(e) { console.error(e); }
+  }
+
+  function subscribeNewsletter() {
+    const email = document.getElementById('footerEmail').value;
+    if (!email || !email.includes('@')) { showToast('Please enter a valid email', 'error'); return; }
+    showToast('Thank you for subscribing! 🎉', 'success');
+    document.getElementById('footerEmail').value = '';
+  }
+</script>
+</body>
+</html>

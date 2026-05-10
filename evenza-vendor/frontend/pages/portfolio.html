@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Portfolio — Evenza Vendor</title>
+  <link rel="stylesheet" href="../css/main.css"/>
+  <style>
+    body { background: var(--gray-50); padding-top: var(--nav-h); }
+
+    .drop-zone {
+      border: 2px dashed var(--gray-300);
+      border-radius: var(--radius-lg);
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all var(--t-base);
+      background: var(--white);
+    }
+
+    .drop-zone:hover, .drop-zone.drag-over {
+      border-color: var(--burg-mid);
+      background: var(--burg-pale);
+    }
+
+    .portfolio-masonry {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .port-item {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+      transition: all var(--t-fast);
+    }
+
+    .port-item:hover { border-color: var(--burg-mid); box-shadow: var(--shadow); }
+
+    .port-item-img {
+      aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px;
+      position: relative;
+    }
+
+    .port-item-overlay {
+      position: absolute; inset: 0;
+      background: rgba(42,26,16,0.65);
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity var(--t-fast);
+    }
+
+    .port-item:hover .port-item-overlay { opacity: 1; }
+
+    .port-action-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all var(--t-fast);
+      backdrop-filter: blur(4px);
+    }
+
+    .port-action-btn:hover { background: rgba(255,255,255,0.25); }
+
+    .port-item-body { padding: 10px 12px; }
+    .port-item-title { font-size: 13px; font-weight: 500; color: var(--dark); margin-bottom: 3px; }
+    .port-item-meta { font-size: 11px; color: var(--gray-400); display: flex; align-items: center; justify-content: space-between; }
+
+    .port-featured-badge {
+      position: absolute; top: 8px; left: 8px;
+      background: var(--gold); color: var(--dark);
+      font-size: 9px; font-weight: 600;
+      padding: 2px 6px; border-radius: 4px;
+    }
+
+    .upload-progress {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .upload-progress-bar-wrap { flex: 1; }
+    .upload-file-name { font-size: 12px; font-weight: 500; color: var(--dark); margin-bottom: 4px; }
+    .upload-bar { height: 4px; background: var(--gray-100); border-radius: 2px; overflow: hidden; }
+    .upload-bar-fill { height: 100%; background: linear-gradient(90deg,var(--burg),var(--gold)); border-radius: 2px; transition: width 0.3s; }
+
+    @media (max-width: 900px) { .portfolio-masonry { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 600px) { .portfolio-masonry { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+<nav class="navbar scrolled" id="navbar" style="background:rgba(253,250,244,0.97)!important;">
+  <div class="navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-mark"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 1L11 6h5l-4 3 1.5 5L9 11.5 4.5 14 6 9 2 6h5z" fill="#F5EFE0"/></svg></div>
+      <span class="nav-logo-text" style="color:var(--dark)!important;"><span style="color:var(--burg)">E</span>venza</span>
+    </a>
+    <div style="display:flex;align-items:center;gap:10px;margin-left:auto;">
+      <a href="dashboard.html" class="btn btn-outline-dark btn-sm">← Dashboard</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container" style="padding-top:32px;padding-bottom:48px;">
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+    <div>
+      <h1 style="font-family:var(--font-display);font-style:italic;color:var(--burg);font-size:2rem;font-weight:400;">My Portfolio</h1>
+      <p style="font-size:14px;color:var(--gray-400);margin-top:2px;">Showcase your best work. Vendors with 10+ portfolio items get 3x more inquiries.</p>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px 16px;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--burg);" id="photoCount">6</div>
+        <div style="font-size:11px;color:var(--gray-400);">Photos</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px 16px;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--burg);">3,400</div>
+        <div style="font-size:11px;color:var(--gray-400);">Views</div>
+      </div>
+      <div style="background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:12px 16px;text-align:center;">
+        <div style="font-family:var(--font-display);font-size:1.4rem;color:var(--gold);">★ 4.9</div>
+        <div style="font-size:11px;color:var(--gray-400);">Avg Rating</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Area -->
+  <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <input type="file" id="fileInput" multiple accept="image/*,video/*" style="display:none;" onchange="handleFiles(this.files)"/>
+    <svg width="48" height="48" fill="none" viewBox="0 0 48 48" style="margin:0 auto 16px;color:var(--gray-300)">
+      <rect x="4" y="12" width="40" height="30" rx="4" stroke="currentColor" stroke-width="2"/>
+      <path d="M4 26l10-8 10 8 8-6 12 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="16" cy="22" r="3" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <div style="font-family:var(--font-display);font-style:italic;font-size:1.2rem;color:var(--gray-500);margin-bottom:6px;">Drag & drop your photos here</div>
+    <div style="font-size:13px;color:var(--gray-400);">or click to browse · JPG, PNG, MP4 · Max 10MB each</div>
+    <button class="btn btn-primary" style="margin-top:18px;pointer-events:none;">
+      <svg width="14" height="14" fill="none" viewBox="0 0 14 14"><path d="M7 2v7M4 4L7 1l3 3M2 10h10v3H2z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Choose Files to Upload
+    </button>
+  </div>
+
+  <!-- Upload Progress -->
+  <div id="uploadProgress" style="display:flex;flex-direction:column;gap:8px;margin-top:14px;"></div>
+
+  <!-- Filters + Sort -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-top:28px;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      <button class="chip on" onclick="filterPort('all',this)">All Media</button>
+      <button class="chip" onclick="filterPort('image',this)">Photos</button>
+      <button class="chip" onclick="filterPort('video',this)">Videos</button>
+      <button class="chip" onclick="filterPort('featured',this)">Featured</button>
+    </div>
+    <select class="form-control form-select" style="width:auto;font-size:13px;" onchange="sortPort(this.value)">
+      <option value="newest">Newest First</option>
+      <option value="views">Most Viewed</option>
+      <option value="likes">Most Liked</option>
+    </select>
+  </div>
+
+  <!-- Portfolio Grid -->
+  <div class="portfolio-masonry" id="portGrid"></div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="../js/main.js"></script>
+<script>
+let portItems = [
+  {id:1,title:'Royal Wedding — Taj Mumbai',cat:'weddings',type:'image',icon:'📷',bg:'#F7EDEF',likes:124,views:1240,featured:true,date:'2024-11-15'},
+  {id:2,title:'Sharma Family Portraits',cat:'portraits',type:'image',icon:'👨‍👩‍👧‍👦',bg:'#FBF3E2',likes:89,views:780,featured:false,date:'2024-11-02'},
+  {id:3,title:'TechCorp Annual Gala',cat:'corporate',type:'image',icon:'🏢',bg:'#E6F1FB',likes:56,views:560,featured:true,date:'2024-10-25'},
+  {id:4,title:'Pre-Wedding at Gateway of India',cat:'prewedding',type:'video',icon:'🎬',bg:'#F0E8F8',likes:210,views:2100,featured:true,date:'2024-10-10'},
+  {id:5,title:'Gupta Wedding Ceremony',cat:'weddings',type:'image',icon:'💐',bg:'#E6F5EE',likes:145,views:1400,featured:false,date:'2024-09-28'},
+  {id:6,title:'Priya & Rohit Engagement',cat:'weddings',type:'image',icon:'💍',bg:'#FBF3E2',likes:98,views:940,featured:false,date:'2024-09-15'},
+];
+
+let filterType = 'all';
+let sortBy = 'newest';
+
+function renderGrid(items) {
+  if (!items.length) {
+    document.getElementById('portGrid').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--gray-400);">No items match this filter.</div>`;
+    return;
+  }
+  document.getElementById('portGrid').innerHTML = items.map(item => `
+    <div class="port-item" data-id="${item.id}">
+      <div class="port-item-img" style="background:${item.bg};">
+        <span>${item.icon}</span>
+        ${item.type === 'video' ? `<div style="position:absolute;width:40px;height:40px;border-radius:50%;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;">▶</div>` : ''}
+        ${item.featured ? `<div class="port-featured-badge">★ Featured</div>` : ''}
+        <div class="port-item-overlay">
+          <button class="port-action-btn" onclick="toggleFeatured(${item.id})" title="${item.featured ? 'Unfeature' : 'Set as featured'}">★</button>
+          <button class="port-action-btn" onclick="editItem(${item.id})" title="Edit">✏</button>
+          <button class="port-action-btn" onclick="deleteItem(${item.id})" title="Delete" style="color:#ff6b6b;">🗑</button>
+        </div>
+      </div>
+      <div class="port-item-body">
+        <div class="port-item-title">${item.title}</div>
+        <div class="port-item-meta">
+          <span style="text-transform:capitalize;">${item.cat}</span>
+          <span>👁 ${item.views} · ♥ ${item.likes}</span>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function filterPort(type, btn) {
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('on'));
+  btn.classList.add('on');
+  filterType = type;
+  applySort();
+}
+
+function sortPort(val) {
+  sortBy = val;
+  applySort();
+}
+
+function applySort() {
+  let items = filterType === 'all' ? [...portItems]
+    : filterType === 'featured' ? portItems.filter(i => i.featured)
+    : portItems.filter(i => i.type === filterType);
+
+  if (sortBy === 'views') items.sort((a,b) => b.views - a.views);
+  if (sortBy === 'likes') items.sort((a,b) => b.likes - a.likes);
+  if (sortBy === 'newest') items.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  renderGrid(items);
+}
+
+function toggleFeatured(id) {
+  const item = portItems.find(i => i.id === id);
+  if (!item) return;
+  item.featured = !item.featured;
+  applySort();
+  showToast(item.featured ? '★ Set as featured item!' : 'Removed from featured', 'success');
+}
+
+function editItem(id) { showToast('Edit feature: opens a details modal', 'info'); }
+
+function deleteItem(id) {
+  if (!confirm('Delete this portfolio item?')) return;
+  portItems = portItems.filter(i => i.id !== id);
+  applySort();
+  document.getElementById('photoCount').textContent = portItems.length;
+  showToast('Portfolio item deleted', 'warning');
+}
+
+function handleFiles(files) {
+  const progWrap = document.getElementById('uploadProgress');
+
+  Array.from(files).forEach((file, i) => {
+    if (file.size > 10 * 1024 * 1024) { showToast(`${file.name} is too large (max 10MB)`, 'error'); return; }
+
+    const progId = 'prog-' + Date.now() + i;
+    const card = document.createElement('div');
+    card.className = 'upload-progress';
+    card.id = progId;
+    card.innerHTML = `
+      <div style="font-size:24px;">${file.type.startsWith('video/') ? '🎬' : '📸'}</div>
+      <div class="upload-progress-bar-wrap">
+        <div class="upload-file-name">${file.name}</div>
+        <div class="upload-bar"><div class="upload-bar-fill" style="width:0%;" id="${progId}-fill"></div></div>
+        <div style="font-size:11px;color:var(--gray-400);margin-top:3px;" id="${progId}-pct">Uploading...</div>
+      </div>
+      <button onclick="document.getElementById('${progId}').remove()" style="background:none;border:none;color:var(--gray-300);cursor:pointer;font-size:18px;">×</button>
+    `;
+    progWrap.appendChild(card);
+
+    let pct = 0;
+    const interval = setInterval(() => {
+      pct = Math.min(pct + Math.random() * 15, 100);
+      const fill = document.getElementById(progId + '-fill');
+      const label = document.getElementById(progId + '-pct');
+      if (fill) fill.style.width = pct + '%';
+      if (label) label.textContent = pct < 100 ? `${Math.round(pct)}% uploaded` : '✓ Upload complete';
+
+      if (pct >= 100) {
+        clearInterval(interval);
+        setTimeout(() => { card.remove(); addToGrid(file); }, 1000);
+      }
+    }, 120);
+  });
+}
+
+function addToGrid(file) {
+  const newItem = {
+    id: Date.now(),
+    title: file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
+    cat: 'new',
+    type: file.type.startsWith('video/') ? 'video' : 'image',
+    icon: file.type.startsWith('video/') ? '🎬' : '🆕',
+    bg: '#F7EDEF',
+    likes: 0, views: 0,
+    featured: false,
+    date: new Date().toISOString().slice(0,10)
+  };
+  portItems.unshift(newItem);
+  document.getElementById('photoCount').textContent = portItems.length;
+  applySort();
+  showToast('Upload complete! Photo added to portfolio.', 'success');
+}
+
+// Drag and drop
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+dz.addEventListener('drop', e => {
+  e.preventDefault();
+  dz.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+
+applySort();
+</script>
+</body>
+</html>

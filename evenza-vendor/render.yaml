@@ -1,0 +1,72 @@
+services:
+  # ============================================================
+  # Backend — Spring Boot API
+  # ============================================================
+  - type: web
+    name: evenza-vendor-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    region: singapore
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: evenza-vendor-db
+          property: connectionString
+      - key: DB_USERNAME
+        fromDatabase:
+          name: evenza-vendor-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: evenza-vendor-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://evenza-vendor.onrender.com
+      - key: BASE_URL
+        value: https://evenza-vendor-api.onrender.com
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      - key: MAIL_PORT
+        value: "587"
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: AWS_S3_BUCKET
+        sync: false
+      - key: AWS_REGION
+        value: ap-south-1
+      - key: AWS_ACCESS_KEY
+        sync: false
+      - key: AWS_SECRET_KEY
+        sync: false
+
+  # ============================================================
+  # Frontend — Static Site
+  # ============================================================
+  - type: web
+    name: evenza-vendor
+    env: static
+    staticPublishPath: ./frontend
+    buildCommand: echo "No build needed for static HTML"
+    plan: free
+    region: singapore
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://evenza-vendor-api.onrender.com/api/*
+      - type: rewrite
+        source: /*
+        destination: /pages/index.html
+
+databases:
+  - name: evenza-vendor-db
+    databaseName: evenza_vendor
+    plan: starter
+    region: singapore
+    ipAllowList: []
